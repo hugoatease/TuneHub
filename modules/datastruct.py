@@ -1,31 +1,52 @@
 class Structure:
     
-    def __init__(self):
-        self.dic = {'Artist': None, 'Title': None, 'Provider': None, 'Lyric': None, 'Filename': None, 'Cached': None}
+    def __init__(self, dic=None):
+        if dic == None:
+            self.dic = {'Artist': None, 'Title': None, 'Provider': None, 'Lyric': None, 'Filename': None, 'Cached': None}
+        else:
+            self.dic = dic
         
-    def Artist(self, artist):
-        self.dic['Artist'] = artist
-        return self.dic
+    def Artist(self, artist=None):
+        if artist != None:
+            self.dic['Artist'] = artist
+            return self.dic
+        else:
+            return self.dic['Artist']
     
-    def Title(self, title):
-        self.dic['Title'] = title
-        return self.dic
+    def Title(self, title=None):
+        if title != None:
+            self.dic['Title'] = title
+            return self.dic
+        else:
+            return self.dic['Title']
     
-    def Provider(self, provider):
-        self.dic['Provider'] = provider
-        return self.dic
+    def Provider(self, provider=None):
+        if provider != None:
+            self.dic['Provider'] = provider
+            return self.dic
+        else:
+            return self.dic['Provider']
     
-    def Lyric(self, lyric):
-        self.dic['Lyric'] = lyric
-        return self.dic
+    def Lyric(self, lyric=None):
+        if lyric != None:
+            self.dic['Lyric'] = lyric
+            return self.dic
+        else:
+            return self.dic['Lyric']
     
-    def Filename(self, filename):
-        self.dic['Filename'] = filename
-        return self.dic
+    def Filename(self, filename=None):
+        if filename != None:
+            self.dic['Filename'] = filename
+            return self.dic
+        else:
+            return self.dic['Filename']
     
-    def Cached(self, cached):
-        self.dic['Cached'] = cached
-        return self.dic
+    def Cached(self, cached=None):
+        if cached != None:
+            self.dic['Cached'] = cached
+            return self.dic
+        else:
+            return self.dic['Cached']
     
     def get(self):
         return self.dic
