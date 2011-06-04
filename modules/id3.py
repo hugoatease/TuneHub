@@ -1,9 +1,10 @@
 import sys
 sys.path.append('lib/')
-
+sys.path.append('modules/')
 import ID3v2
 import ID3
 from os import system
+import datastruct
 
 class ID3handler:
 
@@ -34,17 +35,25 @@ class ID3handler:
 			if artist == 0:
 				return 0
 			else:
-				dic = {'Artist': artist, 'Name': title, 'File': self.filename}
+				structAPI = datastruct.Structure()
+				structAPI.Artist(artist)
+				structAPI.Title(title)
+				structAPI.Filename(self.filename)
+				dic = structAPI.get()
 				return dic
 
 		else:
 			return 0
 
 	def basicInfov1(self):
+		structAPI = datastruct.Structure()
 		mp3 = self.filename
 		parser = ID3.ID3(mp3)
 		if parser.has_key('ARTIST') and parser.has_key('TITLE'):
-			dic = {'Artist': parser['ARTIST'], 'Name': parser['TITLE'], 'File': self.filename}
+			structAPI.Artist(parser['ARTIST'])
+			structAPI.Title(parser['TITLE'])
+			structAPI.Filename(self.filename)
+			dic = structAPI.get()
 			return dic
 		else:
 			return 0
