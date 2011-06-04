@@ -1,6 +1,5 @@
 import datastruct
-from pickle import load
-from pickle import dump
+import pickle
 from os.path import isfile
 
 class Cache:
@@ -14,19 +13,18 @@ class Cache:
         if isfile(self.filename) == False:
             data = []
             f = open(self.filename, 'w')
-            dump(data, f)
+            pickle.dump(data, f)
             f.close()
         else:
             f = open(self.filename, 'r')
-            raw = f.read()
-            data = load(raw)
+            data = pickle.load(f)
             f.close()
             
         self.data = data
         
     def writeFile(self):
         f = open(self.filename, 'w')
-        dump(self.data, f)
+        pickle.dump(self.data, f)
         f.close()
         
     def add(self, lyrics, provider='Cache'):
@@ -42,17 +40,20 @@ class Cache:
         listAPI = datastruct.Listing(self.data)
         listAPI.add(structure)
         self.data = listAPI.get()
+        self.writeFile()
         
     def read(self):
+        structure = None
         for item in self.data:
             if item['Artist']==self.Artist and item['Title']==self.Title:
                 lyric = item['Lyric']
                 provider = item['Provider']
-        structAPI = datastruct.Structure()
-        structAPI.Artist(self.Artist)
-        structAPI.Title(self.Title)
-        structAPI.Cached(True)
-        structAPI.Provider(provider)
-        structAPI.Lyric(lyric)
-        structure = structAPI.get()
+                structAPI = datastruct.Structure()
+                structAPI.Artist(self.Artist)
+                structAPI.Title(self.Title)
+                structAPI.Cached(True)
+                structAPI.Provider(provider)
+                structAPI.Lyric(lyric)
+                structure = structAPI.get()
+            
         return structure
