@@ -1,0 +1,3 @@
+-Stabilize and make access to all the lyrics sites
+-Correct UTF-8 issues
+-Split cache into several files

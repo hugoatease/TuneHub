@@ -29,7 +29,12 @@ class Structure:
     
     def Lyric(self, lyric=None):
         if lyric != None:
-            self.dic['Lyric'] = lyric
+            try:
+                lyric2 = lyric.encode('UTF-8')
+            except:
+                lyric2 = lyric
+            
+            self.dic['Lyric'] = lyric2
             return self.dic
         else:
             return self.dic['Lyric']
