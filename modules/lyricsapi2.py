@@ -27,7 +27,7 @@ class Lyrics:
             sing365 = self.sing365
             lyric = sing365.getLyric()
             self.cached = False
-            if lyric == None:
+            '''if lyric == None:
                 self.provider = 'MLDB'
                 mldb = self.mldb
                 lyric = mldb.getLyric()
@@ -36,8 +36,10 @@ class Lyrics:
                     chartlyrics = self.chartlyrics
                     lyric = chartlyrics.getLyric()
                     if lyric == None:
-                        self.provider = None
-            
+                        self.provider = None'''
+            if lyric == None:
+                self.provider = None
+                    
             self.lyric = lyric
             Cache.add(self.lyric, self.provider)
             return lyric

@@ -92,27 +92,33 @@ class Sing365:
         if self.lyricdata != None:
             data = self.lyricdata
             trim = data.split('<img src=http://www.sing365.com/images/phone2.gif border=0><br><br>')
-            trim = trim[1]
-            trim = trim.split('<br><img src=')
-            html = trim[0]
-            lines = html.split('<br>')
-            lyrics = ''
-            
-            for line in lines:
-                lyrics = lyrics + line
-            
-            self.lyrics = lyrics
-            return lyrics
+            try:
+                trim = trim[1]
+                trim = trim.split('<br><img src=')
+                html = trim[0]
+                lines = html.split('<br>')
+                lyrics = ''
+                
+                for line in lines:
+                    lyrics = lyrics + line
+                
+                self.lyrics = lyrics
+                return lyrics
+            except:
+                self.lyrics = None
+                return None
         else:
             self.lyrics = None
             return None
     
     def getLyric(self):
         keywords = self.keywords
-        self.search()
-        self.parseSearch()
-        self.getLyricUrl()
-        lyrics = self.parseLyricPage()
-        
+        try:
+            self.search()
+            self.parseSearch()
+            self.getLyricUrl()
+            lyrics = self.parseLyricPage()
+        except:
+            lyrics = 'Error'
         return lyrics
         

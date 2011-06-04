@@ -28,19 +28,20 @@ class Cache:
         f.close()
         
     def add(self, lyrics, provider='Cache'):
-        self.provider = provider
-        structAPI = datastruct.Structure()
-        structAPI.Artist(self.Artist)
-        structAPI.Title(self.Title)
-        structAPI.Cached(True)
-        structAPI.Provider(provider)
-        structAPI.Lyric(lyrics)
-        structure = structAPI.get()
-        
-        listAPI = datastruct.Listing(self.data)
-        listAPI.add(structure)
-        self.data = listAPI.get()
-        self.writeFile()
+        if lyrics != 'Error':
+            self.provider = provider
+            structAPI = datastruct.Structure()
+            structAPI.Artist(self.Artist)
+            structAPI.Title(self.Title)
+            structAPI.Cached(True)
+            structAPI.Provider(provider)
+            structAPI.Lyric(lyrics)
+            structure = structAPI.get()
+            
+            listAPI = datastruct.Listing(self.data)
+            listAPI.add(structure)
+            self.data = listAPI.get()
+            self.writeFile()
         
     def read(self):
         structure = None

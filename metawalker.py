@@ -1,11 +1,13 @@
 import sys
 sys.path.append('modules/')
+sys.path.append('lib/')
+
 def metadata(path,output):
 
 	import pickle
 
-	import filer
-	Filer = filer.Filer(path)
+	import filehandler
+	Filer = filehandler.Filer(path)
 
 	import id3handler
 	print "Listing Music directory...",
@@ -14,12 +16,12 @@ def metadata(path,output):
 	print total + ' tracks have been found'
 
 	metalist = []
-	print "Collect metadata from working ID3v2 tags...",
-	for i in mp3list:
-		item = mp3list[i]
+	print "Collect metadata from ID3 tags...",
+	for item in mp3list:
+		
 		id3 = id3handler.ID3handler(filename=item)
-		info = data = id3.basicInfov2()
-	
+		info = data = id3.basicInfo()
+			
 		if info != 0:
 			metalist.append(info)
 	total = str(len(metalist))
@@ -33,10 +35,11 @@ def metadata(path,output):
 print 'Metadata Finder, a part of the Lyrics Fetcher Suite'
 print '(C) Copyright 2011 Hugo Caille. Under the terms of the GNU GPL v3 license\n'
 print 'This software uses the ID3v2 tag creation library available at id3v2-py.sf.net under the terms of the GNU GPL license too\n'
-print 'Now gimme your iPod path, for e.g /media/iPod/, WITH THE TRAILING \'/\' '
-path = raw_input('iPod path: ')
+#print 'Now gimme your iPod path, for e.g /media/iPod/, WITH THE TRAILING \'/\' '
+print "Now enter your music (or player) path"
+path = raw_input('Path: ')
 if len(path)==0:
-	print "You haven't provide your iPod's path. Program will now exit"
+	print "You haven't provide your music path. Program will now exit"
 	sys.exit()
 print '\nMetadata database have meta.db as default name. If you wanna change this, type the new name now'
 output = raw_input("Metadata database's name: ")

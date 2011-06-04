@@ -1,7 +1,7 @@
 import sys
 sys.path.append('modules/')
 sys.path.append('lib/')
-
+sys.path.append('modules/sites')
 from os.path import isfile
 
 import pickle
@@ -13,10 +13,11 @@ f.close()
 total = len(meta)
 print str(total) + ' songs found.'
 
-import lyricsapi
+import lyricsapi2
 found = []
 notfound = []
 
+from datastruct import Structure
 
 def save():
 	global found
@@ -26,18 +27,32 @@ def save():
 
 import progressbar
 widgets = ['Downloading: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
-pbar = progressbar.ProgressBar(widgets=widgets, maxval=total).start()
+#pbar = progressbar.ProgressBar(widgets=widgets, maxval=total).start()
 
 bari=0
+
 for item in  meta:
-	Lyricsapi = lyricsapi.Lyrics(artist=item['Artist'], title=item['Name'])
-	fetched = Lyricsapi.getLyric()
+	structAPI = Structure(item)
+	artist = structAPI.Artist()
+	title = structAPI.Title()
+	print 'Getting lyrics for ' + artist + ' - ' + title
+	Lyricsapi = lyricsapi2.Lyrics(artist, title)
+	fetched = Lyricsapi.get()
 
 	if fetched != 0:
-		fetched['File'] = item['File']
+		fetched['Filename'] = item['Filename']
 		found.append(fetched)
 		save()
 	bari = bari +1
-	pbar.update(bari)
-pbar.finish()
-print str(bari) + ' lyrics found'
+	structAPI = Structure(fetched)
+	lyric = structAPI.Lyric()
+	if lyric != None:
+		cached = structAPI.Cached()
+		if cached == True:
+			print ">>> Found (Cached)"
+		else:
+			print ">>> Found"
+	else:
+		print "!!! Not Found"
+	#pbar.update(bari)
+#pbar.finish()
