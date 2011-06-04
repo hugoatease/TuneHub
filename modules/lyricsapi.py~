@@ -1,0 +1,230 @@
+import urllib2
+import xmltodict
+from urllib import quote
+import cookielib
+import pickle
+from os.path import isfile
+
+class Lyrics:
+
+	def __init__(self, artist, title):
+		self.artist = artist
+		self.title = title
+		self.name = artist + ' - ' + title
+
+	def getLyric(self):
+		artist = self.artist
+		title = self.title
+		artist2 = artist.lower()
+		title2 = title.lower()
+		cache = Cache()
+		cached = cache.read(artist, title)
+		if cached != 0:
+			return cached
+		else:
+
+			chart = ChartLyrics(artist2, title2)
+			lyric = chart.getLyric()
+			provider = 'chartlyrics.com'
+			if lyric == 0:
+				mldb = MLDB(artist2,title2)
+				lyric = mldb.getLyric()
+				provider = 'mldb.org'
+
+			if lyric != 0:
+				dic = {'Artist': artist, 'Title': title, 'Provider': provider, 'Lyrics': lyric}
+				cache.add(dic)
+				return dic
+
+			else:
+				dic = {'Artist': artist, 'Title': title, 'Provider': None, 'Lyrics': None}
+				cache.add(dic)
+				return 0
+
+class ChartLyrics:
+	def __init__(self, artist, title):
+		self.artist = artist
+		self.title = title
+
+	def search(self):
+		url = 'http://api.chartlyrics.com/apiv1.asmx/SearchLyric?artist=' + quote(self.artist) + '&song=' + quote(self.title)
+		try:
+			urlobj = urllib2.urlopen(url)
+			xml = urlobj.read()
+			urlobj.close()
+		except urllib2.URLError:
+			xml = 0
+		if xml != 0:
+			parsed = xmltodict.xmltodict(xml)
+			try:
+				parsed = parsed['SearchLyricResult'][0]
+				lyricid = parsed['LyricId']
+				lyricchecksum = parsed['LyricChecksum']
+			except KeyError and TypeError:
+				lyricid = 0
+				parsed = 0
+				lyricchecksum = 0
+
+			if lyricid !=0:
+				dic = {'ID': lyricid[0], 'Checksum': lyricchecksum[0]}
+				self.lyricid = lyricid[0]
+				self.lyricchecksum = lyricchecksum[0]
+				return dic
+			else:
+				return 0
+		else:
+			return 0
+
+	def getLyric(self):
+		self.search()
+		try:
+			lyricid = self.lyricid
+			checksum = self.lyricchecksum
+		except AttributeError:
+			lyricid = 0
+			checksum = 0
+
+		if lyricid != 0 and checksum != 0:
+			url = 'http://api.chartlyrics.com/apiv1.asmx/GetLyric?lyricId=' + lyricid + '&lyricCheckSum=' + checksum
+			try:
+				urlobj = urllib2.urlopen(url)
+				xml = urlobj.read()
+				urlobj.close()
+				parsed = xmltodict.xmltodict(xml)
+				lyric = parsed['Lyric'][0]
+				print lyric
+				return lyric
+				print OK
+			except urllib2.URLError:
+				return 0
+		else:
+			return 0
+
+class MLDB:
+	def __init__(self, artist, title):
+		self.artist = artist
+		self.title = title
+
+	def search(self):
+		keywords = self.artist + ' ' + self.title
+		keywords = quote(keywords)
+		url = 'http://www.mldb.org/search?mq=' + keywords + '&si=0&mm=0&ob=1'
+		urlobj = urllib2.urlopen(url)
+		data = urlobj.read()
+		urlobj.close()
+		current = urlobj.geturl()
+		if 'http://www.mldb.org/song-' in current:
+			self.songsrc = data
+			return 'song'
+		else:
+			self.searchsrc = data
+			return 'search'
+
+	def songParse(self):
+		data = self.songsrc
+		data = data.split('<p class="songtext" lang="EN">')
+		lyrics = data[1]
+		lyrics = lyrics.split('</p>')
+		lyrics = lyrics[0]
+		lines = lyrics.split('<br />')
+		lyrics = ''
+		for line in lines:
+			lyrics = lyrics + line
+		return lyrics
+
+	def searchParse(self):
+		data = self.searchsrc
+		try:
+			data = data.split('<a href="song-')
+			data = data[1]
+			data = data.split('">')
+			data = data[0]
+		except IndexError:
+			data = 0
+
+		if data !=0:
+			url = 'http://www.mldb.org/song-' + data
+		
+			urlobj = urllib2.urlopen(url)
+			self.songsrc = urlobj.read()
+			urlobj.close()
+		else:
+			self.songsrc = 0
+
+	def getLyric(self):
+		searchpage = self.search()
+
+		if searchpage == 'song':
+			lyrics = self.songParse()
+			return lyrics
+		elif searchpage == 'search':
+			lyricsurl = self.searchParse()
+			if self.songsrc != 0:
+				lyrics = self.songParse()
+				return lyrics			
+			else:
+				return 0
+		else:
+			return 0
+
+class Sing365:
+	def __init__(self, artist, title):
+		self.artist = artist
+		self.title = title
+		self.cookie = cookielib.CookieJar()
+
+	def search(self):
+		keywords = self.artist + ' ' + self.title
+		keywords = quote(keywords)
+		url = 'http://seek.sing365.com/cgi-bin/s.cgi?q=' + keywords + '&submit=go'
+		data = self.rawurl(url,'http://sing365.com/index.html')
+
+	def rawurl(self, url,referer=''):
+		cookie = self.cookie
+		opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
+		opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+        	opener.addheaders = [('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')]
+	        opener.addheaders = [('Keep-Alive', '300')]
+
+		if referer != '':		
+			opener.addheaders = [('Referer',referer)]
+		request = urllib2.Request(url)
+		urlobj = opener.open(request)
+		raw = urlobj.read()
+		urlobj.close()
+		self.cookie = cookie
+		return raw
+
+class Cache:
+	def __init__(self):
+		if isfile('cache.db') == False:
+			struct = []
+			f = open('cache.db','w')
+			pickle.dump(struct,f)
+			f.close()
+
+	def add(self, data):
+		f = open('cache.db','r')
+		existing = pickle.load(f)
+		f.close()
+		dontupdate = 0
+		if data in existing:
+			dontupdate = 1
+
+		if dontupdate == 0:
+			existing.append(data)
+			f = open('cache.db','w')
+			pickle.dump(existing, f)
+			f.close()
+
+	def read(self,artist, title):
+		f = open('cache.db','r')
+		database = pickle.load(f)
+		f.close()
+		dic = 0
+		for item in database:
+			if item['Artist'] == artist and item['Title'] == title:
+				dic = item
+		if dic != 0:
+			dic['Cached'] = True
+		return dic
