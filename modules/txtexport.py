@@ -13,7 +13,8 @@ class TxtExport:
         
     
     def escaping(self, filename):
-        pass
+        filename = filename.replace('/', '-')
+	return filename
     
     
     def makeArtistDir(self):
@@ -26,13 +27,18 @@ class TxtExport:
     def writeLyric(self):
         title = self.structAPI.Title()
         lyric = self.structAPI.Lyric()
+	title = self.escaping(title)
         filename = os.path.join(self.artistdir, title)
 	filename = filename + '.txt'
-        lyric = str(lyric)
-
-        f = open(filename, 'w')
-        f.write(lyric)
-        f.close()
+	
+	lyric = str(lyric)
+	
+	try:
+	    f = open(filename, 'w')
+            f.write(lyric)
+            f.close()
+	except:
+	    pass
         
     def make(self):
         lyric = self.structAPI.Lyric()

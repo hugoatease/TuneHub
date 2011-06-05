@@ -122,6 +122,9 @@ class Sing365:
                 self.lyrics = None
                 toreturn = True
             
+            if '(Instrumental)' in lyrics:
+                self.lyrics = None
+                toreturn = True
         
         
     
