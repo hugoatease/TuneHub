@@ -30,6 +30,9 @@ def save():
 done = 0
 elapsedtime = 0
 
+foundcount = 0
+notfoundcount = 0
+
 for item in  meta:
 	beginningtime = time.time()
 	structAPI = Structure(item)
@@ -48,11 +51,13 @@ for item in  meta:
 	lyric = structAPI.Lyric()
 	cached = structAPI.Cached()
 	if lyric != None:
+		foundcount = foundcount + 1
 		if cached == True:
 			print ">>> Found (Cached)"
 		else:
 			print ">>> Found"
 	else:
+		notfoundcount = notfoundcount + 1
 		if cached == True:
 			print "!!! Not Found (Cached)"
 		else:
@@ -64,10 +69,12 @@ for item in  meta:
 	done = done +1
 	eta = ((total * elapsedtime)/done) - elapsedtime
 	percentage = (done*100)/total
-	print str(done) + '/' + str(total) + ' lyrics found. ' + str(percentage) + '%'
+	foundpercentage = (foundcount*100)/total
+	notfoundpercentage = (notfoundcount*100)/total
+	print str(foundcount) + '/' + str(total) + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%).'
 	elapsedtuple = time.gmtime(elapsedtime)
 	timeformat = '%H:%M:%S'
 	elapsedstr = time.strftime(timeformat, elapsedtuple)
 	etatuple = time.gmtime(eta)
 	etastr = time.strftime(timeformat, etatuple)
-	print elapsedstr + '  elapsed. ETA: ' + etastr
+	print str(percentage) + '%  ' + elapsedstr + '  elapsed. Remaining time: ' + etastr + '\n'
