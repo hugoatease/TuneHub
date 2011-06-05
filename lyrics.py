@@ -5,6 +5,7 @@ sys.path.append('modules/sites')
 from os.path import isfile
 
 import pickle
+import time
 
 print 'Reading meta.db...',
 f = open('meta.db','r')
@@ -25,13 +26,12 @@ def save():
 	pickle.dump(found,f)
 	f.close()
 
-import progressbar
-widgets = ['Downloading: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
-#pbar = progressbar.ProgressBar(widgets=widgets, maxval=total).start()
 
-bari=0
+done = 0
+elapsedtime = 0
 
 for item in  meta:
+	beginningtime = time.time()
 	structAPI = Structure(item)
 	artist = structAPI.Artist()
 	title = structAPI.Title()
@@ -43,16 +43,31 @@ for item in  meta:
 		fetched['Filename'] = item['Filename']
 		found.append(fetched)
 		save()
-	bari = bari +1
+	
 	structAPI = Structure(fetched)
 	lyric = structAPI.Lyric()
+	cached = structAPI.Cached()
 	if lyric != None:
-		cached = structAPI.Cached()
 		if cached == True:
 			print ">>> Found (Cached)"
 		else:
 			print ">>> Found"
 	else:
-		print "!!! Not Found"
-	#pbar.update(bari)
-#pbar.finish()
+		if cached == True:
+			print "!!! Not Found (Cached)"
+		else:
+			print "!!! Not Found"
+	
+	endtime = time.time()
+	loopduration = endtime - beginningtime
+	elapsedtime = elapsedtime + loopduration
+	done = done +1
+	eta = ((total * elapsedtime)/done) - elapsedtime
+	percentage = (done*100)/total
+	print str(done) + '/' + str(total) + ' lyrics found. ' + str(percentage) + '%'
+	elapsedtuple = time.gmtime(elapsedtime)
+	timeformat = '%H:%M:%S'
+	elapsedstr = time.strftime(timeformat, elapsedtuple)
+	etatuple = time.gmtime(eta)
+	etastr = time.strftime(timeformat, etatuple)
+	print elapsedstr + '  elapsed. ETA: ' + etastr
