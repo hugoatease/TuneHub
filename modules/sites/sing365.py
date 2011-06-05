@@ -110,6 +110,20 @@ class Sing365:
         else:
             self.lyrics = None
             return None
+        
+    def filter(self):
+        if self.lyrics != None:
+            toreturn = False
+            lyrics = self.lyrics
+            count1 = lyrics.count('<')
+            count2 = lyrics.count('>')
+            
+            if count1 > 5 and count2 > 5:
+                self.lyrics = None
+                toreturn = True
+            
+        
+        
     
     def getLyric(self):
         keywords = self.keywords
@@ -117,7 +131,9 @@ class Sing365:
             self.search()
             self.parseSearch()
             self.getLyricUrl()
-            lyrics = self.parseLyricPage()
+            self.parseLyricPage()
+            self.filter()
+            lyrics = self.lyrics
         except:
             lyrics = 'Error'
         return lyrics

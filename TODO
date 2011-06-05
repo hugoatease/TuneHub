@@ -1,3 +1,5 @@
 -Stabilize and make access to all the lyrics sites
 -Correct UTF-8 issues
 -Split cache into several files
+-Make a clearer UI with credits and welcome messages
+[DONE]-Create filters for Sing365 API to correct fake downloaded lyrics
