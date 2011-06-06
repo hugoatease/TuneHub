@@ -72,7 +72,7 @@ for item in  meta:
 	percentage = (done*100)/total
 	foundpercentage = (foundcount*100)/total
 	notfoundpercentage = (notfoundcount*100)/total
-	print str(foundcount) + '/' + str(total) + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%).'
+	print str(foundcount)  + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%). ' + str(foundcount+notfoundcount) + '/' + str(total)
 	elapsedtuple = time.gmtime(elapsedtime)
 	timeformat = '%H:%M:%S'
 	elapsedstr = time.strftime(timeformat, elapsedtuple)
