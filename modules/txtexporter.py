@@ -22,13 +22,20 @@ class TxtExport:
         dirname = os.path.join(self.destpath, artist)
         if os.path.isdir(dirname) == False:
             os.mkdir(dirname)
-        self.artistdir = dirname
+        self.destpath = dirname
+	
+    def makeAlbumDir(self):
+	album = self.structAPI.Album()
+	if album != None:
+	    self.destpath = os.path.join(self.destpath, album)
+	    if os.path.isdir(self.destpath) == False:
+		os.mkdir(self.destpath)
         
     def writeLyric(self):
         title = self.structAPI.Title()
         lyric = self.structAPI.Lyric()
 	title = self.escaping(title)
-        filename = os.path.join(self.artistdir, title)
+        filename = os.path.join(self.destpath, title)
 	filename = filename + '.txt'
 	
 	lyric = str(lyric)
@@ -44,4 +51,5 @@ class TxtExport:
         lyric = self.structAPI.Lyric()
         if lyric != None and lyric != 'Error':
             self.makeArtistDir()
+	    self.makeAlbumDir()
             self.writeLyric()
