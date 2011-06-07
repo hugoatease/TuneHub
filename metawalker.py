@@ -2,12 +2,25 @@
 import sys
 sys.path.append('modules/')
 sys.path.append('lib/')
-from windows import Windows
-win = Windows(title = 'LyricsFetcher Metawalker')
-win.begin()
 
-def metadata(path,output):
+if __name__ == '__main__':
+    from windows import Windows
+    win = Windows(title = 'LyricsFetcher Metawalker')
+    win.begin()
 
+def metadata():
+	print "Now enter your music (or player) path"
+	print 'Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)'
+	path = raw_input('Path: ')
+	if len(path)==0:
+		print "You haven't provide your music path. Program will now exit"
+		sys.exit()
+	print '\nMetadata database have meta.db as default name. If you wanna change this, type the new name now'
+	output = raw_input("Metadata database's name: ")
+	if len(output) == 0:
+		output = 'meta.db'
+	print '\n'
+	
 	import pickle
 
 	import filehandler
@@ -36,20 +49,11 @@ def metadata(path,output):
 	f.close()
 	print "[ DONE ]"
 
-print 'Metadata Finder, a part of the Lyrics Fetcher Suite'
-print '(C) Copyright 2011 Hugo Caille. Under the terms of the GNU GPL v3 license\n'
-print 'This software uses the ID3v2 tag creation library available at id3v2-py.sf.net under the terms of the GNU GPL license too\n'
-print "Now enter your music (or player) path"
-print 'Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)'
-path = raw_input('Path: ')
-if len(path)==0:
-	print "You haven't provide your music path. Program will now exit"
-	sys.exit()
-print '\nMetadata database have meta.db as default name. If you wanna change this, type the new name now'
-output = raw_input("Metadata database's name: ")
-if len(output) == 0:
-	output = 'meta.db'
-print '\n'
-metadata(path, output)
-
-win.end()
+if __name__ == '__main__':
+    print 'Metadata Finder, a part of the Lyrics Fetcher Suite'
+    print '(C) Copyright 2011 Hugo Caille. Under the terms of the GNU GPL v3 license\n'
+    print 'This software uses the ID3v2 tag creation library available at id3v2-py.sf.net under the terms of the GNU GPL license too\n'
+    
+    
+    metadata()
+    win.end()
