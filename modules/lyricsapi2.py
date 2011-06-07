@@ -8,10 +8,11 @@ from cache import Cache
 
 class Lyrics:
     
-    def __init__(self, artist, title):
+    def __init__(self, artist, title, album=None):
         self.artist = artist
         self.title = title
         self.name = artist + ' - ' + title
+        self.album = album
         
         self.chartlyrics = ChartLyrics(artist, title)
         self.mldb = MLDB(artist, title)
@@ -54,6 +55,7 @@ class Lyrics:
         data = datastruct.Structure()
         data.Artist(self.artist)
         data.Title(self.title)
+        data.Album(self.album)
         data.Provider(self.provider)
         data.Lyric(self.lyric)
         data.Cached(self.cached)
