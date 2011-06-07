@@ -3,6 +3,11 @@ import sys
 sys.path.append('modules/')
 sys.path.append('lib/')
 sys.path.append('modules/sites')
+
+from windows import Windows
+win = Windows(title='LyricsFetcher Lyrics Downloader')
+win.begin()
+
 from os.path import isfile
 
 import pickle
@@ -79,3 +84,5 @@ for item in  meta:
 	etatuple = time.gmtime(eta)
 	etastr = time.strftime(timeformat, etatuple)
 	print str(percentage) + '%  ' + elapsedstr + '  elapsed. Remaining time: ' + etastr + '\n'
+	
+win.end()
