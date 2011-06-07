@@ -28,6 +28,10 @@ class ID3handler:
 				titleframe = id3.frames['TIT2']
 				titledata = titleframe.unpack()
 				title = titledata['Text']
+				
+				albumframe = id3.frames['TALB']
+				albumdata = albumframe.unpack()
+				album = albumdata['Text']
 
 			except KeyError:
 				artist = 0
@@ -37,6 +41,7 @@ class ID3handler:
 				structAPI = datastruct.Structure()
 				structAPI.Artist(artist)
 				structAPI.Title(title)
+				structAPI.Album(album)
 				structAPI.Filename(self.filename)
 				dic = structAPI.get()
 				return dic
@@ -52,6 +57,8 @@ class ID3handler:
 			structAPI.Artist(parser['ARTIST'])
 			structAPI.Title(parser['TITLE'])
 			structAPI.Filename(self.filename)
+			if parser.has_key('ALBUM'):
+				structAPI.Album(parser['ALBUM'])
 			dic = structAPI.get()
 			return dic
 		else:
