@@ -8,4 +8,3 @@
 - Implement the filters in a new module
 - Cached percentage in lyrics.py UI
 - HTML Export
-- Make one folder by album in TXTExport
