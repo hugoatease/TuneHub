@@ -29,9 +29,12 @@ class ID3handler:
 				titledata = titleframe.unpack()
 				title = titledata['Text']
 				
-				albumframe = id3.frames['TALB']
-				albumdata = albumframe.unpack()
-				album = albumdata['Text']
+				try:
+					albumframe = id3.frames['TALB']
+					albumdata = albumframe.unpack()
+					album = albumdata['Text']
+				except:
+					album = None
 
 			except KeyError:
 				artist = 0
