@@ -2,6 +2,9 @@
 import sys
 sys.path.append('modules/')
 sys.path.append('lib/')
+from windows import Windows
+win = Windows(title = 'LyricsFetcher Metawalker')
+win.begin()
 
 def metadata(path,output):
 
@@ -49,3 +52,4 @@ if len(output) == 0:
 print '\n'
 metadata(path, output)
 
+win.end()
