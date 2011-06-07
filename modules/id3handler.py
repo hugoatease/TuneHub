@@ -15,10 +15,9 @@ class ID3handler:
 		mp3= self.filename
 		try:
 			id3 = ID3v2.ID3v2(filename=mp3)
-		except ID3v2.ID3v2frames.InvalidFrameError.InvalidFrameError:
+		except :
 			id3 = 0
-		except ID3v2.InvalidTagError:
-			id3 = 0
+		
 
 		if id3 != 0:
 			try:
