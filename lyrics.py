@@ -44,10 +44,11 @@ for item in  meta:
 	structAPI = Structure(item)
 	artist = structAPI.Artist()
 	title = structAPI.Title()
+	album = structAPI.Album()
 	print 'Getting lyrics for ' + artist + ' - ' + title
-	Lyricsapi = lyricsapi2.Lyrics(artist, title)
+	Lyricsapi = lyricsapi2.Lyrics(artist, title, album)
+	
 	fetched = Lyricsapi.get()
-
 	if fetched != 0:
 		fetched['Filename'] = item['Filename']
 		found.append(fetched)
