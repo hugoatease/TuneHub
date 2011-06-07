@@ -30,10 +30,19 @@ class TxtExport:
 	    self.destpath = os.path.join(self.destpath, album)
 	    if os.path.isdir(self.destpath) == False:
 		os.mkdir(self.destpath)
+		
+    def layout(self):
+	lyric = self.structAPI.Lyric()
+	album = self.structAPI.Album()
+	artist = self.structAPI.Artist()
+	provider = self.structAPI.Provider()
+	title = self.structAPI.Title()
+	self.lyric = 'Artist: ' + artist + '\nTitle: ' + title + '\nAlbum: ' + album + '\nProvided by ' + provider + '\n\n' + lyric
         
     def writeLyric(self):
+	self.layout()
         title = self.structAPI.Title()
-        lyric = self.structAPI.Lyric()
+        lyric = self.lyric
 	title = self.escaping(title)
         filename = os.path.join(self.destpath, title)
 	filename = filename + '.txt'
