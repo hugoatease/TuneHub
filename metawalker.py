@@ -39,8 +39,8 @@ def metadata(path,output):
 print 'Metadata Finder, a part of the Lyrics Fetcher Suite'
 print '(C) Copyright 2011 Hugo Caille. Under the terms of the GNU GPL v3 license\n'
 print 'This software uses the ID3v2 tag creation library available at id3v2-py.sf.net under the terms of the GNU GPL license too\n'
-#print 'Now gimme your iPod path, for e.g /media/iPod/, WITH THE TRAILING \'/\' '
 print "Now enter your music (or player) path"
+print 'Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)'
 path = raw_input('Path: ')
 if len(path)==0:
 	print "You haven't provide your music path. Program will now exit"
