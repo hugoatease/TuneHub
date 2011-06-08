@@ -18,6 +18,7 @@ def metadata():
 	global tkready
 	def musicPath():
 	    global tkready
+	    path = None
 	    if tkready == True:
 		print 'Please pick up a file in the path selection window'
 		global tkroot
