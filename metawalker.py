@@ -19,11 +19,15 @@ def metadata():
 	def musicPath():
 	    global tkready
 	    if tkready == True:
+		print 'Please pick up a file in the path selection window'
 		global tkroot
 		tkroot = Tkinter.Tk()
 		
 		path = tkFileDialog.askdirectory(parent=tkroot,title="Please select your music path")
+		tkroot.destroy()
 		print 'Choosed path: ' + path
+		if len(path)<2:
+		    path = None
 	    if path == None or tkready == False:
 		if tkready == True:
 		    print 'You haven\'t provide the path through the Graphical Interface. Please follow this'
