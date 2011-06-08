@@ -8,10 +8,30 @@ if __name__ == '__main__':
     win = Windows(title = 'LyricsFetcher Metawalker')
     win.begin()
 
+tkready = True
+try:
+    import Tkinter, tkFileDialog
+except:
+    tkready = False
+
 def metadata():
-	print "Now enter your music (or player) path"
-	print 'Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)'
-	path = raw_input('Path: ')
+	global tkready
+	def musicPath():
+	    global tkready
+	    if tkready == True:
+		global tkroot
+		tkroot = Tkinter.Tk()
+		
+		path = tkFileDialog.askdirectory(parent=tkroot,title="Please select your music path")
+		print 'Choosed path: ' + path
+	    if path == None or tkready == False:
+		if tkready == True:
+		    print 'You haven\'t provide the path through the Graphical Interface. Please follow this'
+		print "Now enter your music (or player) path"
+		print 'Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)'
+		path = raw_input('Path: ')
+	    return path
+	path = musicPath()
 	if len(path)==0:
 		print "You haven't provide your music path. Program will now exit"
 		sys.exit()
