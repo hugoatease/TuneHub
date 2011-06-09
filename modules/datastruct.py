@@ -1,3 +1,5 @@
+import filter
+
 class Structure:
     
     def __init__(self, dic=None):
@@ -44,7 +46,12 @@ class Structure:
             self.dic['Lyric'] = lyric2
             return self.dic
         else:
-            return self.dic['Lyric']
+            filterAPI = filter.LyricsFilter( self.dic['Lyric'] )
+            status = filterAPI.get()
+            if status == False:
+                return self.dic['Lyric']
+            elif status == True:
+                return None
     
     def Filename(self, filename=None):
         if filename != None:
