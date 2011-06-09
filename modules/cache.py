@@ -4,10 +4,13 @@ from os.path import isfile
 
 class Cache:
     
-    def __init__(self, artist, title, filename = 'cache.db'):
+    def __init__(self, filename = 'cache.db'):
+        self.filename = filename
+        self.openFile()
+        
+    def setMeta(self, artist, title):
         self.Artist = artist
         self.Title = title
-        self.filename = filename
         
     def openFile(self):
         if isfile(self.filename) == False:

@@ -4,11 +4,10 @@ from sing365 import *
 from sys import path
 path.append('./sites/')
 import datastruct
-from cache import Cache
 
 class Lyrics:
     
-    def __init__(self, artist, title, album=None):
+    def __init__(self, cacheObject, artist, title, album=None):
         self.artist = artist
         self.title = title
         self.name = artist + ' - ' + title
@@ -17,7 +16,8 @@ class Lyrics:
         self.chartlyrics = ChartLyrics(artist, title)
         self.mldb = MLDB(artist, title)
         self.sing365 = Sing365(artist, title)
-        self.cache = Cache(artist, title)
+        self.cache = cacheObject
+        self.cache.setMeta(self.artist, self.title)
         
     def getLyric(self):
         Cache = self.cache

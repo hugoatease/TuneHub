@@ -14,6 +14,8 @@ from os.path import isfile
 import pickle
 import time
 
+from cache import Cache
+
 def lyrics():
 	global found
 	print 'Reading meta.db...',
@@ -42,6 +44,8 @@ def lyrics():
 	foundcount = 0
 	notfoundcount = 0
 	
+	cacheobject = Cache()
+	
 	for item in  meta:
 		beginningtime = time.time()
 		structAPI = Structure(item)
@@ -49,7 +53,7 @@ def lyrics():
 		title = structAPI.Title()
 		album = structAPI.Album()
 		print 'Getting lyrics for ' + artist + ' - ' + title
-		Lyricsapi = lyricsapi2.Lyrics(artist, title, album)
+		Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album)
 		
 		fetched = Lyricsapi.get()
 		if fetched != 0:
