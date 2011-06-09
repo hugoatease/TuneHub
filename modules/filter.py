@@ -18,7 +18,7 @@ class LyricsFilter:
         if 'instrumental' in lyric:
             contain = True
             
-        if contain == True and lines < 5:
+        if contain == True and lines < 7:
             self.result = True
             
     def html(self):
