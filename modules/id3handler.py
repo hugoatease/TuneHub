@@ -55,8 +55,11 @@ class ID3handler:
 	def basicInfov1(self):
 		structAPI = datastruct.Structure()
 		mp3 = self.filename
-		parser = ID3.ID3(mp3)
-		if parser.has_key('ARTIST') and parser.has_key('TITLE'):
+		try:
+			parser = ID3.ID3(mp3)
+		except:
+			parser = None
+		if ( parser.has_key('ARTIST') and parser.has_key('TITLE') ) and parser != None:
 			structAPI.Artist(parser['ARTIST'])
 			structAPI.Title(parser['TITLE'])
 			structAPI.Filename(self.filename)
