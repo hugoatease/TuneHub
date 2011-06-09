@@ -47,18 +47,18 @@ def metadata():
 	print '\n'
 	
 	import pickle
-
+	print 'The scan can take few minutes, depending on your drive size'
 	import filehandler
 	Filer = filehandler.Filer(path)
 
 	import id3handler
-	print "Listing Music directory...",
+	print "Listing Music directory..."
 	mp3list = Filer.mp3list()
 	total = str(len(mp3list))
 	print total + ' tracks have been found'
 
 	metalist = []
-	print "Collect metadata from ID3 tags...",
+	print "Collecting metadata from ID3 tags..."
 	for item in mp3list:
 		
 		id3 = id3handler.ID3handler(filename=item)
