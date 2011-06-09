@@ -4,6 +4,11 @@ class LyricsFilter:
     def __init__(self, lyric):
         self.lyric = lyric
         self.result = False
+        self.dontget = False
+        
+        if lyric == None:
+            self.result = False
+            self.dontget = True
         
     def instrumental(self):
         contain = False
@@ -25,8 +30,9 @@ class LyricsFilter:
             self.result = True
             
     def get(self):
-        self.instrumental()
-        self.html()
+        if self.dontget == False:
+            self.instrumental()
+            self.html()
         return self.result
         
 if __name__ == '__main__':
