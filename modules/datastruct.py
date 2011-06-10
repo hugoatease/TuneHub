@@ -7,9 +7,17 @@ class Structure:
             self.dic = {'Artist': None, 'Album': None, 'Title': None, 'Provider': None, 'Lyric': None, 'Filename': None, 'Cached': None}
         else:
             self.dic = dic
+            
+    def utfEncode(self, inputed):
+        try:
+            result = inputed.encode('UTF-8')
+        except:
+            result = inputed
+        return result
         
     def Artist(self, artist=None):
         if artist != None:
+            artist = self.utfEncode(artist)
             self.dic['Artist'] = artist
             return self.dic
         else:
@@ -24,6 +32,7 @@ class Structure:
     
     def Title(self, title=None):
         if title != None:
+            title = self.utfEncode(title)
             self.dic['Title'] = title
             return self.dic
         else:
