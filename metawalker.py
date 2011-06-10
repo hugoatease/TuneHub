@@ -62,8 +62,8 @@ def metadata():
 	for item in mp3list:
 		
 		id3 = id3handler.ID3handler(filename=item)
-		info = data = id3.basicInfo()
-			
+		info = data = id3.get()
+		
 		if info != 0:
 			metalist.append(info)
 	total = str(len(metalist))

@@ -85,8 +85,8 @@ class Mutagen:
 	def getDataTuple(self):
 		try:
 			self.mutagenData = self.id3api.Open(self.filename)
-		except self.mutagenData.ID3Warning:
-			pass
+		except:
+			self.mutagenData = None
 		
 	def get(self):
 		structAPI = datastruct.Structure()
@@ -114,9 +114,12 @@ class Mutagen:
 			structAPI.Filename(self.filename)
 			
 			structure = structAPI.get()
-			return structure
+			toreturn = structure
 		else:
-			return 0
+			toreturn = 0
+		if (artist == None) or (title == None):
+			toreturn = 0
+		return toreturn
 		
 		
 class ClassicParsers:
