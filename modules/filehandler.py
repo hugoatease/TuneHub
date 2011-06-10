@@ -19,15 +19,16 @@ class Filer:
 	def supportedList(self):
 		self.musiclist()
 		files = self.filelist
-		mp3list = []
+		list = []
 		
 		for file in files:
-			test = file.split('.mp3')
-			testlen = len(test)
-			if testlen == 2:
-				mp3list.append(file)
-		self.mp3list = mp3list
-		return mp3list
+			ismp3 = '.mp3' in file
+			ism4a = '.m4a' in file
+			isvorbis = '.ogg' in file
+			if ismp3 or ism4a or isvorbis:
+				list.append(file)
+		self.list = list
+		return list
 		
 class OldFiler:
 
