@@ -81,17 +81,16 @@ class Mutagen:
 		self.id3api = None
 		self.format = self.getFormat()
 		self.mutagenInit()
-		
+
 	def getDataTuple(self):
 		try:
 			self.mutagenData = self.id3api.Open(self.filename)
 		except:
 			self.mutagenData = None
 		
-	def get(self):
+	def getMP3(self):
 		structAPI = datastruct.Structure()
-		self.getDataTuple()
-		datatuple = self.mutagenData
+		datatuple = self.datatuple
 		
 		if self.mutagenData != None:
 			
@@ -120,7 +119,48 @@ class Mutagen:
 		if (artist == None) or (title == None):
 			toreturn = 0
 		return toreturn
+	
+	def getM4A(self):
+		structAPI = datastruct.Structure()
+		datatuple = self.datatuple
+		if self.mutagenData != None:
+			
+			try:
+				album = datatuple['\xa9alb']
+			except:
+				album = None
+			try:
+				title = datatuple['\xa9nam']
+			except:
+				title = None
+			try:
+				artist = datatuple['\xa9ART']
+			except:
+				artist = None
+			
+			structAPI.Artist(artist)
+			structAPI.Album(album)
+			structAPI.Title(title)
+			structAPI.Filename(self.filename)
+			
+			structure = structAPI.get()
+			toreturn = structure
+		else:
+			toreturn = 0
+		if (artist == None) or (title == None):
+			toreturn = 0
+		return toreturn
 		
+	def get(self):
+		toreturn = 0
+		self.getDataTuple()
+		self.datatuple = self.mutagenData
+		if self.format == 'mp3':
+			toreturn = self.getMP3()
+		if self.format == 'aac':
+			toreturn = self.getM4A()
+		
+		return toreturn
 		
 class ClassicParsers:
 
