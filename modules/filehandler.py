@@ -16,7 +16,7 @@ class Filer:
 		walker.walk(self.path, self.walkerCallback)
 		return self.filelist
 		
-	def mp3list(self):
+	def supportedList(self):
 		self.musiclist()
 		files = self.filelist
 		mp3list = []

@@ -53,7 +53,7 @@ def metadata():
 
 	import id3handler
 	print "Listing Music directory..."
-	mp3list = Filer.mp3list()
+	mp3list = Filer.supportedList()
 	total = str(len(mp3list))
 	print total + ' tracks have been found'
 
