@@ -48,6 +48,7 @@ class TxtExport:
 	filename = filename + '.txt'
 	
 	lyric = str(lyric)
+	lyric = self.iso(lyric)
 	
 	try:
 	    f = open(filename, 'w')
@@ -55,6 +56,10 @@ class TxtExport:
             f.close()
 	except:
 	    pass
+	
+    def iso(self, lyric):
+	lyric = lyric.encode('iso-8859-1')
+	return lyric
         
     def make(self):
         lyric = self.structAPI.Lyric()
