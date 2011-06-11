@@ -1033,10 +1033,10 @@ class Frame(object):
                     raise ID3JunkFrameError
             else: raise ID3JunkFrameError
             setattr(self, reader.name, value)
-        if data.strip('\x00'):
-            warn('Leftover data: %s: %r (from %r)' % (
-                    type(self).__name__, data, odata),
-                    ID3Warning)
+#        if data.strip('\x00'):
+#            warn('Leftover data: %s: %r (from %r)' % (
+#                    type(self).__name__, data, odata),
+#                    ID3Warning)
 
     def _writeData(self):
         data = []
