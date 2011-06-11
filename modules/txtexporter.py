@@ -64,6 +64,11 @@ class TxtExport:
     def make(self):
         lyric = self.structAPI.Lyric()
         if lyric != None and lyric != 'Error':
-            self.makeArtistDir()
-	    self.makeAlbumDir()
-            self.writeLyric()
+	    try:
+		self.makeArtistDir()
+		self.makeAlbumDir()
+		self.writeLyric()
+	    except OSError:
+		pass
+	    except WindowsError:
+		pass
