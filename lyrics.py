@@ -52,7 +52,7 @@ def lyrics():
 		artist = structAPI.Artist()
 		title = structAPI.Title()
 		album = structAPI.Album()
-		print 'Getting lyrics for ' + artist + ' - ' + title
+		print 'Getting lyrics for ' + repr(artist) + ' - ' + repr(title)
 		Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album)
 		
 		fetched = Lyricsapi.get()

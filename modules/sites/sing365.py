@@ -4,6 +4,8 @@ import urllib2
 class Sing365:
     
     def __init__(self, artist, title):
+        artist = artist.encode('utf-8')
+        title = title.encode('utf-8')
         self.keywords = artist + ' ' + title
     
     def search(self):
