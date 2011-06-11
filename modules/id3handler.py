@@ -11,16 +11,18 @@ class ID3handler:
 	def __init__(self, filename):
 		self.filename = filename
 		self.motorname = 'classic'
+		self.isMutagen()
+		self.filter()
 		
 	def filter(self):
 		ismp3 = '.mp3' in self.filename
 		if ismp3 == False:
-			self.motor = 'classic'
+			self.motorname = 'classic'
 			return True
 		else:
 			return False
 		
-	def isMetagen(self):
+	def isMutagen(self):
 		mutagenerror = False
 		try:
 			import mutagen
@@ -41,13 +43,17 @@ class ID3handler:
 			self.motor = motor
 			
 	def get(self):
-		self.isMetagen()
-		self.filter()
 		self.initMotor()
 		motor = self.motor
 		dic = motor.get()
 		return dic
-				
+	
+	def writeLyrics(self, lyric):
+		if self.motorname == 'mutagen':
+			self.initMotor()
+			motor = self.motor
+			motor.writeLyrics(lyric)
+
 class Mutagen:
 	
 	def getFormat(self):
@@ -65,7 +71,8 @@ class Mutagen:
 	
 	def mutagenInit(self):
 		format = self.format
-		
+		import mutagen
+		self.mutagen = mutagen
 		if format == 'mp3':
 			import mutagen.mp3
 			self.id3api = mutagen.mp3
@@ -81,6 +88,7 @@ class Mutagen:
 		self.id3api = None
 		self.format = self.getFormat()
 		self.mutagenInit()
+
 
 	def getDataTuple(self):
 		try:
@@ -161,6 +169,17 @@ class Mutagen:
 			toreturn = self.getM4A()
 		
 		return toreturn
+	
+	def writeUSLT(self, lyrics):
+		if self.format == 'mp3':
+			mutagen = self.mutagen
+			audio = mutagen.id3.ID3(self.filename)
+			audio.add(mutagen.id3.USLT(encoding=3, lang=u'eng', text=lyrics))
+			audio.save()
+			
+	def writeLyrics(self, lyrics):
+		if self.format == 'mp3':
+			self.writeUSLT(lyrics)
 		
 class ClassicParsers:
 
