@@ -8,16 +8,8 @@ class Structure:
         else:
             self.dic = dic
             
-    def utfEncode(self, inputed):
-        try:
-            result = inputed.encode('UTF-8')
-        except:
-            result = inputed
-        return result
-        
     def Artist(self, artist=None):
         if artist != None:
-            artist = self.utfEncode(artist)
             self.dic['Artist'] = artist
             return self.dic
         else:
@@ -32,7 +24,6 @@ class Structure:
     
     def Title(self, title=None):
         if title != None:
-            title = self.utfEncode(title)
             self.dic['Title'] = title
             return self.dic
         else:
@@ -47,12 +38,7 @@ class Structure:
     
     def Lyric(self, lyric=None):
         if lyric != None:
-            try:
-                lyric2 = lyric.encode('UTF-8')
-            except:
-                lyric2 = lyric
-            
-            self.dic['Lyric'] = lyric2
+            self.dic['Lyric'] = lyric
             return self.dic
         else:
             filterAPI = filter.LyricsFilter( self.dic['Lyric'] )

@@ -116,6 +116,7 @@ class Sing365:
     
     def unicode(self, lyric):
         ulyric = lyric.decode('utf-8')
+        ulyric = unicode(ulyric)
         return ulyric
     
     def getLyric(self):

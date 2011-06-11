@@ -19,6 +19,7 @@ class TxtExport:
     
     def makeArtistDir(self):
         artist = self.structAPI.Artist()
+	artist = artist.encode('utf-8')
         dirname = os.path.join(self.destpath, artist)
         if os.path.isdir(dirname) == False:
             os.mkdir(dirname)
@@ -26,6 +27,7 @@ class TxtExport:
 	
     def makeAlbumDir(self):
 	album = self.structAPI.Album()
+	album = album.encode('utf-8')
 	if album != None:
 	    self.destpath = os.path.join(self.destpath, album)
 	    if os.path.isdir(self.destpath) == False:
@@ -37,18 +39,19 @@ class TxtExport:
 	artist = self.structAPI.Artist()
 	provider = self.structAPI.Provider()
 	title = self.structAPI.Title()
-	self.lyric = 'Artist: ' + artist + '\nTitle: ' + title + '\nAlbum: ' + album + '\nProvided by ' + provider + '\n\n' + lyric
+	self.lyric = u'Artist: ' + unicode(artist) + u'\nTitle: ' + unicode(title) + u'\nAlbum: ' + unicode(album) + u'\nProvided by ' + unicode(provider) + u'\n\n' + unicode(lyric)
         
     def writeLyric(self):
 	self.layout()
         title = self.structAPI.Title()
         lyric = self.lyric
 	title = self.escaping(title)
+	title = title.encode('utf-8')
         filename = os.path.join(self.destpath, title)
 	filename = filename + '.txt'
 	
-	lyric = str(lyric)
-	lyric = self.iso(lyric)
+	
+	lyric = lyric.encode('utf-8')
 	
 	try:
 	    f = open(filename, 'w')
@@ -57,10 +60,7 @@ class TxtExport:
 	except:
 	    pass
 	
-    def iso(self, lyric):
-	lyric = lyric.encode('iso-8859-1')
-	return lyric
-        
+            
     def make(self):
         lyric = self.structAPI.Lyric()
         if lyric != None and lyric != 'Error':
