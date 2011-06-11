@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+outencoding = sys.stdout.encoding
 sys.path.append('modules/')
 sys.path.append('lib/')
 sys.path.append('modules/sites')
@@ -52,7 +53,10 @@ def lyrics():
 		artist = structAPI.Artist()
 		title = structAPI.Title()
 		album = structAPI.Album()
-		print 'Getting lyrics for ' + repr(artist) + ' - ' + repr(title)
+		try:
+			print 'Getting lyrics for ' + artist.encode(outencoding) + ' - ' + title.encode(outencoding)
+		except:
+			print 'Getting lyrics for ' + repr(artist) + ' - ' + repr(title)
 		Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album)
 		
 		fetched = Lyricsapi.get()
