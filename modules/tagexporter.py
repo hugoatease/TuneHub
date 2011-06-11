@@ -1,5 +1,6 @@
 import id3handler
 import datastruct
+from filter import LyricsFilter
 
 class TagExport:
     def __init__(self, item):
@@ -13,4 +14,11 @@ class TagExport:
 
     def make(self):
         if self.lyric != None and len(self.filename)>1:
-            self.write()
+            status = self.filter()
+            if status == False:
+                self.write()
+    
+    def filter(self):
+        api = LyricsFilter(self.lyric)
+        status = api.get()
+        return status
