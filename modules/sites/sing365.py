@@ -114,6 +114,10 @@ class Sing365:
             return None
         
     
+    def unicode(self, lyric):
+        ulyric = lyric.decode('utf-8')
+        return ulyric
+    
     def getLyric(self):
         keywords = self.keywords
         try:
@@ -121,7 +125,7 @@ class Sing365:
             self.parseSearch()
             self.getLyricUrl()
             self.parseLyricPage()
-            lyrics = self.lyrics
+            lyrics = self.unicode(self.lyrics)
         except:
             lyrics = 'Error'
         return lyrics
