@@ -4,7 +4,7 @@ class Structure:
     
     def __init__(self, dic=None):
         if dic == None:
-            self.dic = {'Artist': None, 'Album': None, 'Title': None, 'Provider': None, 'Lyric': None, 'Filename': None, 'Cached': None}
+            self.dic = {'Artist': None, 'Album': None, 'Title': None, 'Year': None, 'Provider': None, 'Lyric': None, 'Filename': None, 'Cached': None}
         else:
             self.dic = dic
             
@@ -28,6 +28,13 @@ class Structure:
             return self.dic
         else:
             return self.dic['Title']
+            
+    def Year(self, year=None):
+        if year != None:
+            self.dic['Year'] = year
+            return self.dic
+        else:
+            return self.dic['Year']
     
     def Provider(self, provider=None):
         if provider != None:
