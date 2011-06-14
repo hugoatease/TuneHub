@@ -48,54 +48,58 @@ def lyrics():
 	cacheobject = Cache()
 	
 	for item in  meta:
-		beginningtime = time.time()
-		structAPI = Structure(item)
-		artist = structAPI.Artist()
-		title = structAPI.Title()
-		album = structAPI.Album()
 		try:
-			print 'Getting lyrics for ' + artist.encode(outencoding) + ' - ' + title.encode(outencoding)
-		except:
-			print 'Getting lyrics for ' + repr(artist) + ' - ' + repr(title)
-		Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album)
-		
-		fetched = Lyricsapi.get()
-		if fetched != 0:
-			fetched['Filename'] = item['Filename']
-			found.append(fetched)
-			save()
-		
-		structAPI = Structure(fetched)
-		lyric = structAPI.Lyric()
-		cached = structAPI.Cached()
-		if lyric != None:
-			foundcount = foundcount + 1
-			if cached == True:
-				print ">>> Found (Cached)"
+			beginningtime = time.time()
+			structAPI = Structure(item)
+			artist = structAPI.Artist()
+			title = structAPI.Title()
+			album = structAPI.Album()
+			try:
+				print 'Getting lyrics for ' + artist.encode(outencoding) + ' - ' + title.encode(outencoding)
+			except:
+				print 'Getting lyrics for ' + repr(artist) + ' - ' + repr(title)
+			Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album)
+			
+			fetched = Lyricsapi.get()
+			if fetched != 0:
+				fetched['Filename'] = item['Filename']
+				found.append(fetched)
+				save()
+			
+			structAPI = Structure(fetched)
+			lyric = structAPI.Lyric()
+			cached = structAPI.Cached()
+			if lyric != None:
+				foundcount = foundcount + 1
+				if cached == True:
+					print ">>> Found (Cached)"
+				else:
+					print ">>> Found"
 			else:
-				print ">>> Found"
-		else:
-			notfoundcount = notfoundcount + 1
-			if cached == True:
-				print "!!! Not Found (Cached)"
-			else:
-				print "!!! Not Found"
+				notfoundcount = notfoundcount + 1
+				if cached == True:
+					print "!!! Not Found (Cached)"
+				else:
+					print "!!! Not Found"
+			
+			endtime = time.time()
+			loopduration = endtime - beginningtime
+			elapsedtime = elapsedtime + loopduration
+			done = done +1
+			eta = ((total * elapsedtime)/done) - elapsedtime
+			percentage = (done*100)/total
+			foundpercentage = (foundcount*100)/total
+			notfoundpercentage = (notfoundcount*100)/total
+			print str(foundcount)  + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%). ' + str(foundcount+notfoundcount) + '/' + str(total)
+			elapsedtuple = time.gmtime(elapsedtime)
+			timeformat = '%H:%M:%S'
+			elapsedstr = time.strftime(timeformat, elapsedtuple)
+			etatuple = time.gmtime(eta)
+			etastr = time.strftime(timeformat, etatuple)
+			print str(percentage) + '%  ' + elapsedstr + '  elapsed. Remaining time: ' + etastr + '\n'
 		
-		endtime = time.time()
-		loopduration = endtime - beginningtime
-		elapsedtime = elapsedtime + loopduration
-		done = done +1
-		eta = ((total * elapsedtime)/done) - elapsedtime
-		percentage = (done*100)/total
-		foundpercentage = (foundcount*100)/total
-		notfoundpercentage = (notfoundcount*100)/total
-		print str(foundcount)  + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%). ' + str(foundcount+notfoundcount) + '/' + str(total)
-		elapsedtuple = time.gmtime(elapsedtime)
-		timeformat = '%H:%M:%S'
-		elapsedstr = time.strftime(timeformat, elapsedtuple)
-		etatuple = time.gmtime(eta)
-		etastr = time.strftime(timeformat, etatuple)
-		print str(percentage) + '%  ' + elapsedstr + '  elapsed. Remaining time: ' + etastr + '\n'
+		except KeyboardInterrupt:
+			sys.exit()
 
 if __name__ == '__main__':
 	lyrics()	
