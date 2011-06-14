@@ -7,11 +7,12 @@ import datastruct
 
 class Lyrics:
     
-    def __init__(self, cacheObject, artist, title, album=None):
+    def __init__(self, cacheObject, artist, title, album=None, year=None):
         self.artist = artist
         self.title = title
         self.name = artist + ' - ' + title
         self.album = album
+        self.year = year
         
         self.chartlyrics = ChartLyrics(artist, title)
         self.mldb = MLDB(artist, title)
@@ -56,6 +57,7 @@ class Lyrics:
         data.Artist(self.artist)
         data.Title(self.title)
         data.Album(self.album)
+        data.Year(self.year)
         data.Provider(self.provider)
         data.Lyric(self.lyric)
         data.Cached(self.cached)

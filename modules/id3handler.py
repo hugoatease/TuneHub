@@ -114,10 +114,17 @@ class Mutagen:
 				artist = datatuple['TPE1'][0]
 			except:
 				artist = None
+			try:
+				year = int(unicode(datatuple['TDRC'][0]))
+				if year == 0:
+					year = None
+			except:
+				year = None
 			
 			structAPI.Artist(artist)
 			structAPI.Album(album)
 			structAPI.Title(title)
+			structAPI.Year(year)
 			structAPI.Filename(self.filename)
 			
 			structure = structAPI.get()
@@ -145,10 +152,17 @@ class Mutagen:
 				artist = datatuple['\xa9ART']
 			except:
 				artist = None
+			try:
+				year = int(unicode(datatuple['\xa9day']))
+				if year == 0:
+					year = None
+			except:
+				year = None
 			
 			structAPI.Artist(artist)
 			structAPI.Album(album)
 			structAPI.Title(title)
+			structAPI.Year(year)
 			structAPI.Filename(self.filename)
 			
 			structure = structAPI.get()

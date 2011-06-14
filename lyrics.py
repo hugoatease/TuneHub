@@ -54,11 +54,12 @@ def lyrics():
 			artist = structAPI.Artist()
 			title = structAPI.Title()
 			album = structAPI.Album()
+			year = structAPI.Year()
 			try:
 				print 'Getting lyrics for ' + artist.encode(outencoding) + ' - ' + title.encode(outencoding)
 			except:
 				print 'Getting lyrics for ' + repr(artist) + ' - ' + repr(title)
-			Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album)
+			Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album, year)
 			
 			fetched = Lyricsapi.get()
 			if fetched != 0:

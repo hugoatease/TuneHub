@@ -39,7 +39,8 @@ class TxtExport:
 	artist = self.structAPI.Artist()
 	provider = self.structAPI.Provider()
 	title = self.structAPI.Title()
-	self.lyric = u'Artist: ' + unicode(artist) + u'\nTitle: ' + unicode(title) + u'\nAlbum: ' + unicode(album) + u'\nProvided by ' + unicode(provider) + u'\n\n' + unicode(lyric)
+	year = self.structAPI.Year()
+	self.lyric = u'Artist: ' + unicode(artist) + u'\nTitle: ' + unicode(title) + u'\nAlbum: ' + unicode(album) + '\nYear: ' +unicode(year) + u'\nProvided by ' + unicode(provider) + u'\n\n' + unicode(lyric)
         
     def writeLyric(self):
 	self.layout()
