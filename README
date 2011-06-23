@@ -29,3 +29,12 @@ The package come with these files and folders:
 * txtexport.py exports 'lyrics.db' as .txt files, in an 'export/' folder.
 * tagexport.py writes 'lyrics.db' data into the corresponding audio files metadata, using USLT tag in MP3s or 'lyr' tag in AAC files.
 * ipodupdate.py updates your iPod's database to show the tag lyrics. For the moment, it's running only on linux and is shipped only with the 'experimental' branch of our git repository
+
+License
+=============
+The LyricsFetcher Suite is licensed under the terms of the GNU GPL v3 license
+
+Third-party
+=============
+* This software include parts of the Mutagen Project, licensed under the GNU GPL v2 and available at http://code.google.com/p/mutagen/
+* This software includes parts of the 
