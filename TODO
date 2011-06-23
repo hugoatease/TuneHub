@@ -1,7 +1,0 @@
--Stabilize and make access to all the lyrics sites
--Make a clearer UI with credits and welcome messages
--Add translation for lyrics
-- Make a new filter for instrumental lyrics
-- Implement the filters in a new module
-- Cached percentage in lyrics.py UI
-- HTML Export
