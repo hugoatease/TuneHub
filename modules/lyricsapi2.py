@@ -1,5 +1,3 @@
-from chartlyrics import *
-from mldb import *
 from sing365 import *
 from sys import path
 path.append('./sites/')
@@ -14,8 +12,6 @@ class Lyrics:
         self.album = album
         self.year = year
         
-        self.chartlyrics = ChartLyrics(artist, title)
-        self.mldb = MLDB(artist, title)
         self.sing365 = Sing365(artist, title)
         self.cache = cacheObject
         self.cache.setMeta(self.artist, self.title)
