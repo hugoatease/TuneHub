@@ -5,3 +5,4 @@
 - Implement the filters in a new module
 - Cached percentage in lyrics.py UI
 - HTML Export
+- Txt export in same directories as music

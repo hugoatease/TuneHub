@@ -37,6 +37,7 @@ import lyricsapi2
 from datastruct import Structure
 from tagexporter import TagExport
 from txtexporter import TxtExport
+import progressbar
 
 win = Windows(title = 'TuneHub CLI')
 win.begin()
@@ -217,13 +218,17 @@ def tagexport():
     data = pickle.load(f)
     f.close()
     print '[ DONE ]'
-    
+    datalen = len(data)
     from tagexporter import TagExport
-    print 'Exporting...',
+    widgets = ['Exporting: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()), ' ', progressbar.ETA()]
+    pbar = progressbar.ProgressBar(widgets=widgets, maxval=datalen).start()
+    count = 0
     for item in data:
+	count = count + 1
+	pbar.update(count)
         motor = TagExport(item)
         motor.make()
-    print '[ DONE ]'
+    pbar.finsh()
     print 'Lyrics have been exported in their respective files tags'
 
 def txtexport():
