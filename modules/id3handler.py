@@ -1,43 +1,14 @@
 import sys
-sys.path.append('lib/')
-sys.path.append('modules/')
-import ID3v2
-import ID3
 from os import system
+
 import datastruct
 
 class ID3handler:
 	
 	def __init__(self, filename):
 		self.filename = filename
-		self.motorname = 'classic'
-		self.isMutagen()
-		self.filter()
 		
-	def filter(self):
-		ismp3 = '.mp3' in self.filename
-		if ismp3 == False:
-			self.motorname = 'classic'
-			return True
-		else:
-			return False
-		
-	def isMutagen(self):
-		mutagenerror = False
-		try:
-			import mutagen
-		except:
-			mutagenerror = True
-		
-		if mutagenerror == False:
-			self.motorname = 'mutagen'
-			
 	def initMotor(self):
-		motorname = self.motorname
-		
-		if motorname == 'classic':
-			motor = ClassicParsers(self.filename)
-			self.motor = motor
 		if motorname == 'mutagen':
 			motor = Mutagen(self.filename)
 			self.motor = motor
@@ -49,10 +20,9 @@ class ID3handler:
 		return dic
 	
 	def writeLyrics(self, lyric):
-		if self.motorname == 'mutagen':
-			self.initMotor()
-			motor = self.motor
-			motor.writeLyrics(lyric)
+		self.initMotor()
+		motor = self.motor
+		motor.writeLyrics(lyric)
 
 class Mutagen:
 	
