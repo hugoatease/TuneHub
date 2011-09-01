@@ -1,6 +1,22 @@
 #!/usr/bin/python2
 
 import sys
+import traceback
+import threading
+import urllib, urllib2
+#Custom Traceback Handler
+def errorhandler(type, value, tb):
+    print '\n========TuneHub Error Handler========'
+    print 'TuneHub just crashed. Informations about this crash :'
+    traceback.print_exception(type, value, tb)
+    f = open('error.log', 'a')
+    traceback.print_exception(type, value, tb, limit = None, file = f)
+    print '\nError Information has been written in error.log'
+    print 'Next time you launch TuneHub, it will send us the bug report.'
+    print '==========Tips==========\nOne TuneHub\'s common cause of crash is data corruption.\nRemove cache.db and meta.db files and try again.'
+sys.excepthook = errorhandler
+#End of handler
+
 sys.path.append('modules/')
 sys.path.append('lib/')
 sys.path.append('modules/sites')
@@ -25,7 +41,28 @@ from txtexporter import TxtExport
 win = Windows(title = 'TuneHub CLI')
 win.begin()
 
-print "TuneHub - Lyrics Fetching Made Easy\nCopyright 2011 Hugo Caille under the GNU GPL v3 license.\n==> This is a developpement version, don't except it to works perfectly.\n==> Please report bugs and crashes to hugo@gkz.fr.nf\n"
+print "TuneHub - Lyrics Fetching Made Easy\nCopyright 2011 Hugo Caille under the GNU GPL v3 license.\n==> This is a developpement version, don't except it to works perfectly.\n==> Please report bugs and crashes to hugo@gkz.fr.nf\n==> TuneHub will try to report bugs automatically. These reports are anonymous.\n"
+
+#Error Sending System
+def bugreport():
+    f = open('error.log')
+    data = f.read()
+    f.close()
+    postdata = {'bug' : data}
+    postdata = urllib.urlencode(postdata)
+    request = urllib2.Request('http://www.tunehub.tk/bugreport.php', postdata)
+    try:
+	page = urllib2.urlopen(request)
+	page.close()
+    except urllib2.HTTPError:
+	print 'Unable to send the bug report.'
+
+    print 'Type Enter'
+if os.path.isfile('error.log'):
+    print 'A crashed occured last time you used TuneHub.\nSending crash informations in background...\n'
+    bugthread = threading.Thread(group=None, target=bugreport)
+    bugthread.start()
+    
 
 def metadata():
 	global tkready
