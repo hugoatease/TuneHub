@@ -55,10 +55,11 @@ def bugreport():
 	page = urllib2.urlopen(request)
 	page.close()
 	os.remove('error.log')
+	print 'Report succesfully sent. Thank you for testing TuneHub :)'
     except urllib2.HTTPError:
 	print 'Unable to send the bug report.'
 
-    print 'Type Enter'
+    print 'Press Enter'
 if os.path.isfile('error.log'):
     print 'A crashed occured last time you used TuneHub.\nSending crash informations in background...\n'
     bugthread = threading.Thread(group=None, target=bugreport)
