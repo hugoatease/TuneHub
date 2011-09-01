@@ -228,7 +228,7 @@ def tagexport():
 	pbar.update(count)
         motor = TagExport(item)
         motor.make()
-    pbar.finsh()
+    pbar.finish()
     print 'Lyrics have been exported in their respective files tags'
 
 def txtexport():
