@@ -54,6 +54,7 @@ def bugreport():
     try:
 	page = urllib2.urlopen(request)
 	page.close()
+	os.remove('error.log')
     except urllib2.HTTPError:
 	print 'Unable to send the bug report.'
 
