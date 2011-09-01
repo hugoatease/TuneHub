@@ -1,1 +1,40 @@
-A tool for fetching lyrics associated with ID3 tags
+The LyricsFetcher Suite is a set of utilities for grabbing the lyrics 
+corresponding to your fave music on the internet.
+
+This tool is designed to run with the Python 2 language. It isn't suitable for use with Python 3.
+
+Python Dependencies
+===================
+
+* urllib  
+* urllib2
+* gpod (the libgpod python bindings, a library for managing iPods on UNIX systems)
+
+Installing
+===================
+* On Windows, just download the master branch's zip archive and decompress it.
+* On UNIX (Linux, Mac, BSD...) you will run git clone git://github.com/hugoatease/LyricsFetcher.git . It allows you to stay in touch with improvements by typing 'git pull origin master'
+
+Updating
+==================
+* On Windows, please check periodically github.com/hugoatease/LyricsFetcher for new updates
+* On UNIX, run 'git pull origin master' oftenly
+
+Using
+=============
+The package come with these files and folders:
+* shell.py allows you to interact with LyricsFetcher script as commands. It can be very useful for running LyricsFetcher on Windows platforms, but it can't print tracebacks (Python error messages).
+* metawalker.py scans your music player or path and makes a database called 'meta.db'.
+* lyrics.py downloads your lyrics and stores them into 'lyrics.db'.
+* txtexport.py exports 'lyrics.db' as .txt files, in an 'export/' folder.
+* tagexport.py writes 'lyrics.db' data into the corresponding audio files metadata, using USLT tag in MP3s or 'lyr' tag in AAC files.
+* ipodupdate.py updates your iPod's database to show the tag lyrics. For the moment, it's running only on linux and is shipped only with the 'experimental' branch of our git repository
+
+License
+=============
+The LyricsFetcher Suite is licensed under the terms of the GNU GPL v3 license
+
+Third-party
+=============
+* This software include parts of the Mutagen Project, licensed under the GNU GPL v2 and available at http://code.google.com/p/mutagen/
+* This software includes parts of the 

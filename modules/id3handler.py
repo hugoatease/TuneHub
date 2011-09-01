@@ -1,46 +1,16 @@
 import sys
-sys.path.append('lib/')
-sys.path.append('modules/')
-import ID3v2
-import ID3
 from os import system
+
 import datastruct
 
 class ID3handler:
 	
 	def __init__(self, filename):
 		self.filename = filename
-		self.motorname = 'classic'
-		self.isMutagen()
-		self.filter()
 		
-	def filter(self):
-		ismp3 = '.mp3' in self.filename
-		if ismp3 == False:
-			self.motorname = 'classic'
-			return True
-		else:
-			return False
-		
-	def isMutagen(self):
-		mutagenerror = False
-		try:
-			import mutagen
-		except:
-			mutagenerror = True
-		
-		if mutagenerror == False:
-			self.motorname = 'mutagen'
-			
 	def initMotor(self):
-		motorname = self.motorname
-		
-		if motorname == 'classic':
-			motor = ClassicParsers(self.filename)
-			self.motor = motor
-		if motorname == 'mutagen':
-			motor = Mutagen(self.filename)
-			self.motor = motor
+		motor = Mutagen(self.filename)
+		self.motor = motor
 			
 	def get(self):
 		self.initMotor()
@@ -49,10 +19,9 @@ class ID3handler:
 		return dic
 	
 	def writeLyrics(self, lyric):
-		if self.motorname == 'mutagen':
-			self.initMotor()
-			motor = self.motor
-			motor.writeLyrics(lyric)
+		self.initMotor()
+		motor = self.motor
+		motor.writeLyrics(lyric)
 
 class Mutagen:
 	
@@ -99,7 +68,6 @@ class Mutagen:
 	def getMP3(self):
 		structAPI = datastruct.Structure()
 		datatuple = self.datatuple
-		
 		if self.mutagenData != None:
 			
 			try:
@@ -114,17 +82,27 @@ class Mutagen:
 				artist = datatuple['TPE1'][0]
 			except:
 				artist = None
+			try:
+				year = int(unicode(datatuple['TDRC'][0]))
+				if year == 0:
+					year = None
+			except:
+				year = None
 			
 			structAPI.Artist(artist)
 			structAPI.Album(album)
 			structAPI.Title(title)
+			structAPI.Year(year)
 			structAPI.Filename(self.filename)
 			
 			structure = structAPI.get()
 			toreturn = structure
 		else:
 			toreturn = 0
-		if (artist == None) or (title == None):
+		try:
+			if (artist == None) or (title == None):
+				toreturn = 0
+		except UnboundLocalError:
 			toreturn = 0
 		return toreturn
 	
@@ -145,10 +123,17 @@ class Mutagen:
 				artist = datatuple['\xa9ART']
 			except:
 				artist = None
+			try:
+				year = int(unicode(datatuple['\xa9day']))
+				if year == 0:
+					year = None
+			except:
+				year = None
 			
 			structAPI.Artist(artist)
 			structAPI.Album(album)
 			structAPI.Title(title)
+			structAPI.Year(year)
 			structAPI.Filename(self.filename)
 			
 			structure = structAPI.get()
@@ -180,77 +165,3 @@ class Mutagen:
 	def writeLyrics(self, lyrics):
 		if self.format == 'mp3':
 			self.writeUSLT(lyrics)
-		
-class ClassicParsers:
-
-	def __init__(self, filename):
-		self.filename = filename
-
-	def getV2(self):
-		mp3= self.filename
-		try:
-			id3 = ID3v2.ID3v2(filename=mp3)
-		except :
-			id3 = 0
-		
-
-		if id3 != 0:
-			try:
-				artistframe = id3.frames['TPE1']
-				artistdata = artistframe.unpack()
-				artist = artistdata['Text']
-
-				titleframe = id3.frames['TIT2']
-				titledata = titleframe.unpack()
-				title = titledata['Text']
-				
-				try:
-					albumframe = id3.frames['TALB']
-					albumdata = albumframe.unpack()
-					album = albumdata['Text']
-				except:
-					album = None
-
-			except KeyError:
-				artist = 0
-			if artist == 0:
-				return 0
-			else:
-				structAPI = datastruct.Structure()
-				structAPI.Artist(artist)
-				structAPI.Title(title)
-				structAPI.Album(album)
-				structAPI.Filename(self.filename)
-				dic = structAPI.get()
-				return dic
-
-		else:
-			return 0
-
-	def getV1(self):
-		structAPI = datastruct.Structure()
-		mp3 = self.filename
-		try:
-			parser = ID3.ID3(mp3)
-		except:
-			parser = None
-		if ( parser.has_key('ARTIST') and parser.has_key('TITLE') ) and parser != None:
-			structAPI.Artist(parser['ARTIST'])
-			structAPI.Title(parser['TITLE'])
-			structAPI.Filename(self.filename)
-			if parser.has_key('ALBUM'):
-				structAPI.Album(parser['ALBUM'])
-			dic = structAPI.get()
-			return dic
-		else:
-			return 0
-
-	def get(self):
-		dic = self.getV1()
-		if dic == 0:
-			dic = self.getV2()
-		return dic
-
-	def writeLyrics(self,lyrics):
-		command = self.id3v2bin + ' --USLT "' + lyrics + '" ' + self.filename
-		system(command)

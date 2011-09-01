@@ -1,9 +1,6 @@
 -Stabilize and make access to all the lyrics sites
--Correct UTF-8 issues
--Split cache into several files
 -Make a clearer UI with credits and welcome messages
 -Add translation for lyrics
-- Make a nicer .txt export layout with title, artist and provider
 - Make a new filter for instrumental lyrics
 - Implement the filters in a new module
 - Cached percentage in lyrics.py UI

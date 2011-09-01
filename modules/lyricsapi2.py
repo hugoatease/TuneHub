@@ -1,5 +1,3 @@
-from chartlyrics import *
-from mldb import *
 from sing365 import *
 from sys import path
 path.append('./sites/')
@@ -7,14 +5,13 @@ import datastruct
 
 class Lyrics:
     
-    def __init__(self, cacheObject, artist, title, album=None):
+    def __init__(self, cacheObject, artist, title, album=None, year=None):
         self.artist = artist
         self.title = title
         self.name = artist + ' - ' + title
         self.album = album
+        self.year = year
         
-        self.chartlyrics = ChartLyrics(artist, title)
-        self.mldb = MLDB(artist, title)
         self.sing365 = Sing365(artist, title)
         self.cache = cacheObject
         self.cache.setMeta(self.artist, self.title)
@@ -56,6 +53,7 @@ class Lyrics:
         data.Artist(self.artist)
         data.Title(self.title)
         data.Album(self.album)
+        data.Year(self.year)
         data.Provider(self.provider)
         data.Lyric(self.lyric)
         data.Cached(self.cached)

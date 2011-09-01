@@ -27,8 +27,8 @@ class TxtExport:
 	
     def makeAlbumDir(self):
 	album = self.structAPI.Album()
-	album = album.encode('utf-8')
 	if album != None:
+	    album = album.encode('utf-8')
 	    self.destpath = os.path.join(self.destpath, album)
 	    if os.path.isdir(self.destpath) == False:
 		os.mkdir(self.destpath)
@@ -39,7 +39,8 @@ class TxtExport:
 	artist = self.structAPI.Artist()
 	provider = self.structAPI.Provider()
 	title = self.structAPI.Title()
-	self.lyric = u'Artist: ' + unicode(artist) + u'\nTitle: ' + unicode(title) + u'\nAlbum: ' + unicode(album) + u'\nProvided by ' + unicode(provider) + u'\n\n' + unicode(lyric)
+	year = self.structAPI.Year()
+	self.lyric = u'Artist: ' + unicode(artist) + u'\nTitle: ' + unicode(title) + u'\nAlbum: ' + unicode(album) + '\nYear: ' +unicode(year) + u'\nProvided by ' + unicode(provider) + u'\n\n' + unicode(lyric)
         
     def writeLyric(self):
 	self.layout()
@@ -61,8 +62,20 @@ class TxtExport:
 	    pass
 	
             
-    def make(self):
+    def makeWindows(self):
         lyric = self.structAPI.Lyric()
+        if lyric != None and lyric != 'Error':
+	    try:
+		self.makeArtistDir()
+		self.makeAlbumDir()
+		self.writeLyric()
+	    #except OSError:
+		#pass
+	    except WindowsError:
+	        pass
+
+    def makePOSIX(self):
+	lyric = self.structAPI.Lyric()
         if lyric != None and lyric != 'Error':
 	    try:
 		self.makeArtistDir()
@@ -70,5 +83,9 @@ class TxtExport:
 		self.writeLyric()
 	    except OSError:
 		pass
-	    except WindowsError:
-		pass
+	    
+    def make(self):
+	if os.name == 'nt':
+	    self.makeWindows()
+	else:
+	    self.makePOSIX()
