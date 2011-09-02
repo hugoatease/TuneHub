@@ -248,20 +248,22 @@ def tagexport():
     pbar.finish()
     print 'Lyrics have been exported in their respective files tags'
 
-def txtexport():
+def export(mode='export'):
     print 'Opening lyrics.db...',
     f = open('lyrics.db')
     data = pickle.load(f)
     f.close()
     print '[ DONE ]'
-    
-    from txtexporter import TxtExport
+
     print 'Exporting...',
     for item in data:
-        motor = TxtExport(item)
+        motor = TxtExport(item, mode)
         motor.make()
     print '[ DONE ]'
-    print 'Lyrics have been exported in the export/ directory'
+    if mode=='export':
+	print 'Lyrics have been exported in the export/ directory'
+    if mode=='path':
+	print 'Lyrics have been exported in corresponding songs directories'
 
 
 while 1:
@@ -279,7 +281,8 @@ while 1:
         print '>help: Show the list of commands'
         print '>scan: Search a directory for music.'
         print '>fetch: Fetch the songs lyrics on the Internet.'
-        print '>export: Export the lyrics as .txt files'
+        print '>export: Export the lyrics as .txt files in export/'
+	print '>txt: Export the lyrics as .txt in the songs directories.'
         print '>tag: Export fetched lyrics in the music files ID3 tags'
         print '>exit: Exit TuneHub'
     
@@ -290,7 +293,10 @@ while 1:
         lyrics()
     
     if cmd == 'export':
-        txtexport()
+        export()
+	
+    if cmd == 'txt':
+	export('path')
         
     if cmd == 'tag':
         tagexport()
