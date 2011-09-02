@@ -2,7 +2,7 @@
 - Add translation for lyrics
 - Cached percentage in lyrics.py UI
 - HTML Export
-- Txt export in same directories as music
 - CDDB search
 - Alter titles
 - iPod Support (Linux & Windows)
+- Urllib timeout
