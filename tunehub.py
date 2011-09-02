@@ -197,7 +197,7 @@ def lyrics():
 			structAPI = Structure(fetched)
 			lyric = structAPI.Lyric()
 			cached = structAPI.Cached()
-			if lyric != None:
+			if lyric != None and lyric != 'Error':
 				foundcount = foundcount + 1
 				if cached == True:
 					print ">>> Found (Cached)"
