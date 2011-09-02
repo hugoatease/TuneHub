@@ -1,9 +1,30 @@
 #!/usr/bin/python2
 
 import sys
+import os
+import traceback
+#Custom Traceback Handler
+def errorhandler(type, value, tb):
+    print '\n========TuneHub Error Handler========'
+    print 'TuneHub just crashed. Informations about this crash :'
+    traceback.print_exception(type, value, tb)
+    f = open('error.log', 'a')
+    traceback.print_exception(type, value, tb, limit = None, file = f)
+    print '\nError Information has been written in error.log'
+    print 'Next time you launch TuneHub, it will send us the bug report.'
+    if os.name == 'nt':
+	print 'Press enter to quit'
+	raw_input()
+	
+sys.excepthook = errorhandler
+#End of handler
+
 sys.path.append('modules/')
 sys.path.append('lib/')
 sys.path.append('modules/sites')
+
+import threading
+import urllib, urllib2
 
 tkready = True
 try:
@@ -14,7 +35,6 @@ except:
 from windows import Windows
 import pickle
 import filehandler, id3handler
-import os
 import time
 from cache import Cache
 import lyricsapi2
@@ -22,11 +42,48 @@ from datastruct import Structure
 from tagexporter import TagExport
 from txtexporter import TxtExport
 import ipod
+import progressbar
 
 win = Windows(title = 'TuneHub CLI')
 win.begin()
 
-print "TuneHub - Lyrics Fetching Made Easy\nCopyright 2011 Hugo Caille under the GNU GPL v3 license.\n==> This is a developpement version, don't except it to works perfectly.\n==> Please report bugs and crashes to hugo@gkz.fr.nf\n"
+print "TuneHub - Lyrics Fetching Made Easy\nCopyright 2011 Hugo Caille under the GNU GPL v3 license.\n==> This is a developpement version, don't except it to works perfectly.\n==> Please report bugs and crashes to hugo@gkz.fr.nf\n==> TuneHub will try to report bugs automatically. These reports are anonymous.\n"
+
+#Checks cache.db and meta.db
+def fileCheck(filename):
+    if os.path.isfile(filename):
+	f = open(filename, 'r')
+	try:
+	    pickle.load(f)
+	except:
+	    os.remove(filename)
+	    print filename + ' was corrupted. Now deleted to prevent file corruption issues.'
+fileCheck('meta.db')
+fileCheck('cache.db')
+fileCheck('lyric.db')
+
+#Error Sending System
+def bugreport():
+    f = open('error.log')
+    data = f.read()
+    f.close()
+    postdata = {'bug' : data}
+    postdata = urllib.urlencode(postdata)
+    request = urllib2.Request('http://www.tunehub.tk/bugreport.php', postdata)
+    try:
+	page = urllib2.urlopen(request)
+	page.close()
+	os.remove('error.log')
+	print 'Report succesfully sent. Thank you for testing TuneHub :)'
+    except urllib2.HTTPError:
+	print 'Unable to send the bug report.'
+
+    print 'Press Enter'
+if os.path.isfile('error.log'):
+    print 'A crashed occured last time you used TuneHub.\nSending crash informations in background...\n'
+    bugthread = threading.Thread(group=None, target=bugreport)
+    bugthread.start()
+    
 
 def metadata():
 	global tkready
@@ -141,7 +198,7 @@ def lyrics():
 			structAPI = Structure(fetched)
 			lyric = structAPI.Lyric()
 			cached = structAPI.Cached()
-			if lyric != None:
+			if lyric != None and lyric != 'Error':
 				foundcount = foundcount + 1
 				if cached == True:
 					print ">>> Found (Cached)"
@@ -179,28 +236,32 @@ def tagexport():
     data = pickle.load(f)
     f.close()
     print '[ DONE ]'
-    
+    datalen = len(data)
     from tagexporter import TagExport
-    print 'Exporting...',
+    widgets = ['Exporting: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()), ' ', progressbar.ETA()]
+    pbar = progressbar.ProgressBar(widgets=widgets, maxval=datalen).start()
+    count = 0
     for item in data:
+	count = count + 1
+	pbar.update(count)
         motor = TagExport(item)
         motor.make()
-    print '[ DONE ]'
+    pbar.finish()
     print 'Lyrics have been exported in their respective files tags'
 
-def txtexport():
+def export(mode='export'):
     print 'Opening lyrics.db...',
     f = open('lyrics.db')
     data = pickle.load(f)
     f.close()
     print '[ DONE ]'
-    
-    from txtexporter import TxtExport
+
     print 'Exporting...',
     for item in data:
-        motor = TxtExport(item)
+        motor = TxtExport(item, mode)
         motor.make()
     print '[ DONE ]'
+<<<<<<< HEAD
     print 'Lyrics have been exported in the export/ directory'
     
 def ipodflag():
@@ -220,6 +281,12 @@ def ipodflag():
     
     ipodapi.make()
     
+=======
+    if mode=='export':
+	print 'Lyrics have been exported in the export/ directory'
+    if mode=='path':
+	print 'Lyrics have been exported in corresponding songs directories'
+>>>>>>> testing
 
 
 while 1:
@@ -237,7 +304,8 @@ while 1:
         print '>help: Show the list of commands'
         print '>scan: Search a directory for music.'
         print '>fetch: Fetch the songs lyrics on the Internet.'
-        print '>export: Export the lyrics as .txt files'
+        print '>export: Export the lyrics as .txt files in export/'
+	print '>txt: Export the lyrics as .txt in the songs directories.'
         print '>tag: Export fetched lyrics in the music files ID3 tags'
         print '>exit: Exit TuneHub'
     
@@ -249,7 +317,10 @@ while 1:
 	
     
     if cmd == 'export':
-        txtexport()
+        export()
+	
+    if cmd == 'txt':
+	export('path')
         
     if cmd == 'tag':
         tagexport()

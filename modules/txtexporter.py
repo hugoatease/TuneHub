@@ -3,13 +3,14 @@ import os
 
 class TxtExport:
     
-    def __init__(self, songdata, destpath='export'):
+    def __init__(self, songdata, mode='export', destpath='export'):
         
         if os.path.isdir(destpath) == False:
             os.mkdir(destpath)
             
         self.structAPI = datastruct.Structure(songdata)
         self.destpath = destpath
+	self.mode = mode
         
     
     def escaping(self, filename):
@@ -59,7 +60,7 @@ class TxtExport:
             f.write(lyric)
             f.close()
 	except:
-	    pass
+	    print '!!! Unable to write Lyrics for ' + filename
 	
             
     def makeWindows(self):
@@ -84,8 +85,21 @@ class TxtExport:
 	    except OSError:
 		pass
 	    
+    def makeByPath(self):
+	lyric = self.structAPI.Lyric()
+	filename = self.structAPI.Filename()
+	self.destpath = os.path.dirname(filename)
+        if lyric != None and lyric != 'Error':
+	    try:
+		self.writeLyric()
+	    except OSError:
+		pass
+	    
     def make(self):
-	if os.name == 'nt':
-	    self.makeWindows()
-	else:
-	    self.makePOSIX()
+	if self.mode == 'export':
+	    if os.name == 'nt':
+		self.makeWindows()
+	    else:
+		self.makePOSIX()
+	if self.mode == 'path':
+	    self.makeByPath()
