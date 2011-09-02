@@ -21,6 +21,7 @@ import lyricsapi2
 from datastruct import Structure
 from tagexporter import TagExport
 from txtexporter import TxtExport
+import ipod
 
 win = Windows(title = 'TuneHub CLI')
 win.begin()
@@ -201,6 +202,22 @@ def txtexport():
         motor.make()
     print '[ DONE ]'
     print 'Lyrics have been exported in the export/ directory'
+    
+def ipodflag():
+    mount = raw_input("Enter iPod's mountpoint.")
+    ipodapi = ipod.iPod(mount)
+    f = open('lyric.db', 'r')
+    data = pickle.load(f)
+    f.close()
+    
+    for item in data:
+	structapi = Structure(item)
+	artist = structapi.Artist()
+	title = structapi.Title()
+	ipodapi.flag(artist, title)
+    
+    ipodapi.make()
+    
 
 
 while 1:
@@ -227,12 +244,16 @@ while 1:
     
     if cmd == 'fetch':
         lyrics()
+	
     
     if cmd == 'export':
         txtexport()
         
     if cmd == 'tag':
         tagexport()
+    
+    if cmd == 'ipod':
+	ipodflag()
     
     if cmd == 'exit':
         print '\n'
