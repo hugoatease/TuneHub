@@ -214,7 +214,9 @@ def ipodflag():
 	structapi = Structure(item)
 	artist = structapi.Artist()
 	title = structapi.Title()
-	ipodapi.flag(artist, title)
+	lyric = structapi.Lyric()
+	if lyric != None and lyric != 'Error':
+	    ipodapi.flag(artist, title)
     
     ipodapi.make()
     
