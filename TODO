@@ -1,8 +1,8 @@
--Stabilize and make access to all the lyrics sites
--Make a clearer UI with credits and welcome messages
--Add translation for lyrics
-- Make a new filter for instrumental lyrics
-- Implement the filters in a new module
+- Stabilize and make access to all the lyrics sites
+- Add translation for lyrics
 - Cached percentage in lyrics.py UI
 - HTML Export
 - Txt export in same directories as music
+- CDDB search
+- Alter titles
+- iPod Support (Linux & Windows)

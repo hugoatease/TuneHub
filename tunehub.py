@@ -1,9 +1,8 @@
 #!/usr/bin/python2
 
 import sys
+import os
 import traceback
-import threading
-import urllib, urllib2
 #Custom Traceback Handler
 def errorhandler(type, value, tb):
     print '\n========TuneHub Error Handler========'
@@ -13,13 +12,19 @@ def errorhandler(type, value, tb):
     traceback.print_exception(type, value, tb, limit = None, file = f)
     print '\nError Information has been written in error.log'
     print 'Next time you launch TuneHub, it will send us the bug report.'
-    print '==========Tips==========\nOne TuneHub\'s common cause of crash is data corruption.\nRemove cache.db and meta.db files and try again.'
+    if os.name == 'nt':
+	print 'Press enter to quit'
+	raw_input()
+	
 sys.excepthook = errorhandler
 #End of handler
 
 sys.path.append('modules/')
 sys.path.append('lib/')
 sys.path.append('modules/sites')
+
+import threading
+import urllib, urllib2
 
 tkready = True
 try:
@@ -30,7 +35,6 @@ except:
 from windows import Windows
 import pickle
 import filehandler, id3handler
-import os
 import time
 from cache import Cache
 import lyricsapi2
@@ -43,6 +47,19 @@ win = Windows(title = 'TuneHub CLI')
 win.begin()
 
 print "TuneHub - Lyrics Fetching Made Easy\nCopyright 2011 Hugo Caille under the GNU GPL v3 license.\n==> This is a developpement version, don't except it to works perfectly.\n==> Please report bugs and crashes to hugo@gkz.fr.nf\n==> TuneHub will try to report bugs automatically. These reports are anonymous.\n"
+
+#Checks cache.db and meta.db
+def fileCheck(filename):
+    if os.path.isfile(filename):
+	f = open(filename, 'r')
+	try:
+	    pickle.load(f)
+	except:
+	    os.remove(filename)
+	    print filename + ' was corrupted. Now deleted to prevent file corruption issues.'
+fileCheck('meta.db')
+fileCheck('cache.db')
+fileCheck('lyric.db')
 
 #Error Sending System
 def bugreport():
