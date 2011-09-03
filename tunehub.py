@@ -270,7 +270,7 @@ def export(mode='export'):
 def ipodflag():
     mount = raw_input("Enter iPod's mountpoint.")
     ipodapi = ipod.iPod(mount)
-    f = open('lyric.db', 'r')
+    f = open('lyrics.db', 'r')
     data = pickle.load(f)
     f.close()
     
