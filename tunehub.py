@@ -261,8 +261,11 @@ def export(mode='export'):
         motor = TxtExport(item, mode)
         motor.make()
     print '[ DONE ]'
-<<<<<<< HEAD
-    print 'Lyrics have been exported in the export/ directory'
+    if mode=='export':
+        print 'Lyrics have been exported in the export/ directory'
+    if mode=='path':
+        print 'Lyrics have been exported in corresponding songs directories'
+
     
 def ipodflag():
     mount = raw_input("Enter iPod's mountpoint.")
@@ -281,14 +284,6 @@ def ipodflag():
     
     ipodapi.make()
     
-=======
-    if mode=='export':
-	print 'Lyrics have been exported in the export/ directory'
-    if mode=='path':
-	print 'Lyrics have been exported in corresponding songs directories'
->>>>>>> testing
-
-
 while 1:
     try:
         cmd = raw_input('TuneHub> ')
