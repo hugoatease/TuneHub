@@ -60,7 +60,7 @@ def fileCheck(filename):
 	    print filename + ' was corrupted. Now deleted to prevent file corruption issues.'
 fileCheck('meta.db')
 fileCheck('cache.db')
-fileCheck('lyric.db')
+fileCheck('lyrics.db')
 
 #Error Sending System
 def bugreport():
