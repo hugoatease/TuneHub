@@ -28,7 +28,7 @@ class iPod:
     def success(self):
         self.done = self.done + 1
 
-    def make():
+    def make(self):
         if self.mode == 'local':
             self.makeLocal()
         if self.mode == 'remote':
