@@ -35,7 +35,7 @@ class iPod:
             self.makeRemote()
     
     def makeRemote(self):
-        print 'Remote iPod flagging is not supported yet.'
+        print 'Remote iPod flagging is not supported yet.\nIf you\'re running Linux, please make sure you have python-gpod package installed.'
             
     def makeLocal(self):
         self.itdb = gpod.itdb_parse(self.mount, None)
