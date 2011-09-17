@@ -1,4 +1,4 @@
-import filter
+from tunehubcore import filter
 
 class Structure:
     
