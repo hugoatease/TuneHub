@@ -1,13 +1,17 @@
+#!/usr/bin/python
+import lyricsapi
 import urllib
 import urllib2
 
-class Sing365:
-    
-    def __init__(self, artist, title):
-        artist = artist.encode('utf-8')
-        title = title.encode('utf-8')
-        self.keywords = artist + ' ' + title
-    
+__siteID__ = 'Sing365'
+__version__ = 1
+__author__ = 'Hugo Caille'
+
+class Fetch(lyricsapi.Fetcher):
+
+    def keywords(self):
+        self.keywords = self.artist + ' ' + self.title
+
     def search(self):
         keywords = self.keywords
         
@@ -113,21 +117,22 @@ class Sing365:
             self.lyrics = None
             return None
         
+
     
-    def unicode(self, lyric):
-        ulyric = lyric.decode('utf-8')
-        ulyric = unicode(ulyric)
-        return ulyric
-    
-    def getLyric(self):
-        keywords = self.keywords
+    def get(self):
         try:
+            self.keywords()
             self.search()
             self.parseSearch()
             self.getLyricUrl()
             self.parseLyricPage()
             lyrics = self.unicode(self.lyrics)
         except:
-            lyrics = 'Error'
+            lyrics = None
         return lyrics
         
+if __name__ == '__main__':
+    artist = raw_input('Artist: ')
+    title = raw_input('Title: ')
+    api = Fetch(artist, title)
+    print api.get()

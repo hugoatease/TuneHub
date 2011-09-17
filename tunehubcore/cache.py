@@ -1,4 +1,4 @@
-import datastruct
+from tunehubcore import datastruct
 import pickle
 from os.path import isfile
 

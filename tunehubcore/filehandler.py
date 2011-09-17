@@ -1,6 +1,4 @@
 from os import listdir
-import sys
-sys.path.append('../lib/')
 
 class Filer:
 	def __init__(self, path):
