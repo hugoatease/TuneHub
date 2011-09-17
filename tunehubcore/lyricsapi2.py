@@ -1,7 +1,5 @@
-from sing365 import *
-from sys import path
-path.append('./sites/')
-import datastruct
+from tunehubcore.sites.sing365 import *
+from tunehubcore import datastruct
 
 class Lyrics:
     

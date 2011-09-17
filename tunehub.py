@@ -1,5 +1,8 @@
 #!/usr/bin/python
+#TuneHub CLI.
+#Copyright 2011 Hugo Caille under the GNU GPL v3 license.
 
+#Python level-1 imports
 import sys
 import os
 import traceback
@@ -17,39 +20,35 @@ def errorhandler(type, value, tb):
 	raw_input()
 	
 sys.excepthook = errorhandler
-#End of handler
+#End of Custom Traceback Handler
 
-sys.path.append('modules/')
-sys.path.append('lib/')
-sys.path.append('modules/sites')
+#Python level-2 imports
+import threading, urllib, urllib2, pickle, time
 
-import threading
-import urllib, urllib2
-
+#Optionnal Tkinter library import
 tkready = True
 try:
     import Tkinter, tkFileDialog
 except:
     tkready = False
+#End of Tkinter import process
 
-from windows import Windows
-import pickle
-import filehandler, id3handler
-import time
-from cache import Cache
-import lyricsapi2
-from datastruct import Structure
-from tagexporter import TagExport
-from txtexporter import TxtExport
-import ipod
+sys.path.append('lib/') #Append third-party libraries path to Python interpreter path's
+#Third-party imports
 import progressbar
 
-win = Windows(title = 'TuneHub CLI')
+#TuneHub internal modules imports.
+import tunehubcore
+from tunehubcore import windows, filehandler, id3handler, cache, lyricsapi2, datastruct, tagexporter, txtexporter
+
+#Initialising Windows-specific environnement.
+win = windows.Windows(title = 'TuneHub CLI')
 win.begin()
 
+#Greeting Message
 print "TuneHub - Lyrics Fetching Made Easy\nCopyright 2011 Hugo Caille under the GNU GPL v3 license.\n==> This is a developpement version, don't except it to works perfectly.\n==> Please report bugs and crashes to hugo@gkz.fr.nf\n==> TuneHub will try to report bugs automatically. These reports are anonymous.\n"
 
-#Checks cache.db and meta.db
+#Checks cache.db, meta.db and lyrics.db for corruption. They will be deleted if they can't be open by Pickle.
 def fileCheck(filename):
     if os.path.isfile(filename):
 	f = open(filename, 'r')
@@ -61,6 +60,7 @@ def fileCheck(filename):
 fileCheck('meta.db')
 fileCheck('cache.db')
 fileCheck('lyrics.db')
+#End of filecheck.
 
 #Error Sending System
 def bugreport():
@@ -83,9 +83,11 @@ if os.path.isfile('error.log'):
     print 'A crashed occured last time you used TuneHub.\nSending crash informations in background...\n'
     bugthread = threading.Thread(group=None, target=bugreport)
     bugthread.start()
+#End of the error seding system.
     
 
 def metadata():
+#Scans a path for metadata, fills-in meta.db
 	global tkready
 	def musicPath():
 	    global tkready
@@ -116,13 +118,8 @@ def metadata():
 	if len(output) == 0:
 		output = 'meta.db'
 	print '\n'
-	
-	import pickle
 	print 'The scan can take few minutes, depending on your drive size'
-	import filehandler
 	Filer = filehandler.Filer(path)
-
-	import id3handler
 	print "Listing Music directory..."
 	mp3list = Filer.supportedList()
 	total = str(len(mp3list))
@@ -144,8 +141,10 @@ def metadata():
 	pickle.dump(metalist, f)
 	f.close()
 	print "[ DONE ]"
+
         
 def lyrics():
+#Fetch the lyrics on Internet.
 	global found
 	print 'Reading meta.db...',
 	f = open('meta.db','r')
@@ -154,11 +153,10 @@ def lyrics():
 	total = len(meta)
 	print str(total) + ' songs found.'
 	
-	import lyricsapi2
 	found = []
 	notfound = []
 	
-	from datastruct import Structure
+	Structure = datastruct.Structure
 	
 	def save():
 		global found
@@ -173,7 +171,7 @@ def lyrics():
 	foundcount = 0
 	notfoundcount = 0
 	
-	cacheobject = Cache()
+	cacheobject = cache.Cache()
 	
 	for item in  meta:
 		try:
@@ -195,7 +193,7 @@ def lyrics():
 				found.append(fetched)
 				save()
 			
-			structAPI = Structure(fetched)
+			structAPI = datastruct.Structure(fetched)
 			lyric = structAPI.Lyric()
 			cached = structAPI.Cached()
 			if lyric != None and lyric != 'Error':
@@ -231,25 +229,26 @@ def lyrics():
 			sys.exit()
 
 def tagexport():
+#Exports the lyrics in music tags
     print 'Opening lyrics.db...',
     f = open('lyrics.db')
     data = pickle.load(f)
     f.close()
     print '[ DONE ]'
     datalen = len(data)
-    from tagexporter import TagExport
     widgets = ['Exporting: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()), ' ', progressbar.ETA()]
     pbar = progressbar.ProgressBar(widgets=widgets, maxval=datalen).start()
     count = 0
     for item in data:
 	count = count + 1
 	pbar.update(count)
-        motor = TagExport(item)
+        motor = tagexporter.TagExport(item)
         motor.make()
     pbar.finish()
     print 'Lyrics have been exported in their respective files tags'
 
 def export(mode='export'):
+#Exports the lyrics as txt in export/ path or in the same paths as audio files.
     print 'Opening lyrics.db...',
     f = open('lyrics.db')
     data = pickle.load(f)
@@ -258,7 +257,7 @@ def export(mode='export'):
 
     print 'Exporting...',
     for item in data:
-        motor = TxtExport(item, mode)
+        motor = txtexporter.TxtExport(item, mode)
         motor.make()
     print '[ DONE ]'
     if mode=='export':
@@ -283,7 +282,8 @@ def ipodflag():
 	    ipodapi.flag(artist, title)
     
     ipodapi.make()
-    
+
+#CLI loop
 while 1:
     try:
         cmd = raw_input('TuneHub> ')

@@ -1,4 +1,4 @@
-import datastruct
+from tunehubcore import datastruct
 import os
 
 class TxtExport:

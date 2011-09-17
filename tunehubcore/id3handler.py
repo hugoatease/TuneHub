@@ -1,7 +1,7 @@
 import sys
 from os import system
 
-import datastruct
+from tunehubcore import datastruct
 
 class ID3handler:
 	

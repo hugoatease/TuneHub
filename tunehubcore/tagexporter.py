@@ -1,5 +1,5 @@
-import id3handler
-import datastruct
+from tunehubcore import id3handler
+from tunehubcore import datastruct
 from filter import LyricsFilter
 
 class TagExport:
