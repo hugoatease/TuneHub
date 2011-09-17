@@ -1,5 +1,5 @@
-from tunehubcore.sites.sing365 import *
 from tunehubcore import datastruct
+from lyriclib import lyricsapi
 
 class Lyrics:
     
@@ -10,7 +10,7 @@ class Lyrics:
         self.album = album
         self.year = year
         
-        self.sing365 = Sing365(artist, title)
+        self.API = lyricsapi.API(artist, title)
         self.cache = cacheObject
         self.cache.setMeta(self.artist, self.title)
         
@@ -19,20 +19,13 @@ class Lyrics:
         Cache.openFile()
         cached_data = Cache.read()
         if cached_data == None:
-            self.provider = 'Sing365'
-            sing365 = self.sing365
-            lyric = sing365.getLyric()
+            API=self.API
+            lyric = API.get()
+            try:
+                self.provider = API.siteID
+            except:
+                self.provider = None
             self.cached = False
-            '''if lyric == None:
-                self.provider = 'MLDB'
-                mldb = self.mldb
-                lyric = mldb.getLyric()
-                if lyric == None:
-                    self.provider = 'ChartLyrics'
-                    chartlyrics = self.chartlyrics
-                    lyric = chartlyrics.getLyric()
-                    if lyric == None:
-                        self.provider = None'''
             if lyric == None:
                 self.provider = None
                     
