@@ -8,8 +8,8 @@ class Filer:
 		self.filelist.append(filename)
 		
 	def musiclist(self):
-		from dirwalker import DirWalker
-		walker = DirWalker()
+		from tunehubcore import dirwalker
+		walker = dirwalker.DirWalker()
 		self.filelist = []
 		walker.walk(self.path, self.walkerCallback)
 		return self.filelist
