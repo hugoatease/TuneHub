@@ -59,8 +59,8 @@ win = windows.Windows(title = 'TuneHub CLI')
 win.begin()
 
 #Greeting Message
-print "TuneHub - Lyrics Fetching Made Easy\n"
-print "TuneHub  Copyright (C) 2011  Hugo Caille\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.\nFor details, read the COPYING file or visit http://www.gnu.org/licenses/gpl-3.0.txt\n"
+print "TuneHub - Lyrics Fetching Made Easy"
+print "Copyright (C) 2011  Hugo Caille\n\n==> This program comes with ABSOLUTELY NO WARRANTY.\n==> This is free software, and you are welcome to redistribute it\n==> under certain conditions. For details, read the COPYING file\n==> or visit http://www.gnu.org/licenses/gpl-3.0.txt\n"
 
 #Checks cache.db, meta.db and lyrics.db for corruption. They will be deleted if they can't be open by Pickle.
 def fileCheck(filename):
