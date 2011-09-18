@@ -1,6 +1,19 @@
 #!/usr/bin/python
-#TuneHub CLI.
-#Copyright 2011 Hugo Caille under the GNU GPL v3 license.
+'''TuneHub CLI.
+    Copyright (C) 2011  Hugo Caille
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 
 #Python level-1 imports
 import sys
@@ -46,7 +59,8 @@ win = windows.Windows(title = 'TuneHub CLI')
 win.begin()
 
 #Greeting Message
-print "TuneHub - Lyrics Fetching Made Easy\nCopyright 2011 Hugo Caille under the GNU GPL v3 license.\n==> This is a developpement version, don't except it to works perfectly.\n==> Please report bugs and crashes to hugo@gkz.fr.nf\n==> TuneHub will try to report bugs automatically. These reports are anonymous.\n"
+print "TuneHub - Lyrics Fetching Made Easy"
+print "Copyright (C) 2011  Hugo Caille\n\n==> This program comes with ABSOLUTELY NO WARRANTY.\n==> This is free software, and you are welcome to redistribute it\n==> under certain conditions. For details, read the COPYING file\n==> or visit http://www.gnu.org/licenses/gpl-3.0.txt\n"
 
 #Checks cache.db, meta.db and lyrics.db for corruption. They will be deleted if they can't be open by Pickle.
 def fileCheck(filename):
