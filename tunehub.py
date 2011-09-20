@@ -46,7 +46,6 @@ except:
     tkready = False
 #End of Tkinter import process
 
-sys.path.append('lib/') #Append third-party libraries path to Python interpreter path's
 #Third-party imports
 import progressbar
 
