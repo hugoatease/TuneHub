@@ -36,7 +36,7 @@ sys.excepthook = errorhandler
 #End of Custom Traceback Handler
 
 #Python level-2 imports
-import threading, urllib, urllib2, pickle, time
+import threading, urllib, urllib2, pickle, time, logging
 
 #Optionnal Tkinter library import
 tkready = True
@@ -57,6 +57,29 @@ from tunehubcore import windows, filehandler, id3handler, cache, lyricsapi2, dat
 win = windows.Windows(title = 'TuneHub CLI')
 win.begin()
 
+#Initialising locales
+import gettext
+import locale
+
+def init_localization():
+  '''prepare l10n'''
+  locale.setlocale(locale.LC_ALL, '') # use user's preferred locale
+  # take first two characters of country code
+  loc = locale.getlocale()
+  filename = "res/messages_%s.mo" % locale.getlocale()[0][0:2]
+
+  try:
+    logging.debug( "Opening message file %s for locale %s", filename, loc[0] )
+    trans = gettext.GNUTranslations(open( filename, "rb" ) )
+  except IOError:
+    logging.debug( "Locale not found. Using default messages" )
+    trans = gettext.NullTranslations()
+
+  trans.install()
+
+if __name__ == '__main__':
+  init_localization()
+
 #Greeting Message
 print "TuneHub - Lyrics Fetching Made Easy"
 print "Copyright (C) 2011  Hugo Caille\n\n==> This program comes with ABSOLUTELY NO WARRANTY.\n==> This is free software, and you are welcome to redistribute it\n==> under certain conditions. For details, read the COPYING file\n==> or visit http://www.gnu.org/licenses/gpl-3.0.txt\n"
@@ -69,7 +92,7 @@ def fileCheck(filename):
 	    pickle.load(f)
 	except:
 	    os.remove(filename)
-	    print filename + ' was corrupted. Now deleted to prevent file corruption issues.'
+	    print _('%s was corrupted. Now deleted to prevent file corruption issues.') %filename
 fileCheck('meta.db')
 fileCheck('cache.db')
 fileCheck('lyrics.db')
@@ -87,13 +110,13 @@ def bugreport():
 	page = urllib2.urlopen(request)
 	page.close()
 	os.remove('error.log')
-	print 'Report succesfully sent. Thank you for testing TuneHub :)'
+	print _('Report succesfully sent. Thank you for testing TuneHub :)')
     except urllib2.HTTPError:
-	print 'Unable to send the bug report.'
+	print _('Unable to send the bug report.')
 
-    print 'Press Enter'
+    print _('Press Enter')
 if os.path.isfile('error.log'):
-    print 'A crashed occured last time you used TuneHub.\nSending crash informations in background...\n'
+    print _('A crashed occured last time you used TuneHub.\nSending crash informations in background...\n')
     bugthread = threading.Thread(group=None, target=bugreport)
     bugthread.start()
 #End of the error seding system.
@@ -106,40 +129,40 @@ def metadata():
 	    global tkready
 	    path = None
 	    if tkready == True:
-		print 'Please pick up a file in the path selection window'
+		print _('Please pick up a file in the path selection window')
 		global tkroot
 		tkroot = Tkinter.Tk()
 		
-		path = tkFileDialog.askdirectory(parent=tkroot,title="Please select your music path")
+		path = tkFileDialog.askdirectory(parent=tkroot,title=_("Please select your music path"))
 		tkroot.destroy()
-		print 'Choosed path: ' + path
+		print _('Choosed path: %s') %path
 		if len(path)<2:
 		    path = None
 	    if path == None or tkready == False:
 		if tkready == True:
-		    print 'You haven\'t provide the path through the Graphical Interface. Please follow this'
-		print "Now enter your music (or player) path"
-		print 'Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)'
-		path = raw_input('Path: ')
+		    print _('You haven\'t provide the path through the Graphical Interface. Please follow this')
+		print _("Now enter your music (or player) path")
+		print _('Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)')
+		path = raw_input(_('Path: '))
 	    return path
 	path = musicPath()
 	if len(path)==0:
-		print "You haven't provide your music path. Program will now exit"
+		print _("You haven't provide your music path. Program will now exit")
 		sys.exit()
-	print '\nMetadata database have meta.db as default name. If you wanna change this, type the new name now'
-	output = raw_input("Metadata database's name: ")
+	print _('\nMetadata database have meta.db as default name. If you wanna change this, type the new name now')
+	output = raw_input( _("Metadata database's name: ") )
 	if len(output) == 0:
 		output = 'meta.db'
 	print '\n'
-	print 'The scan can take few minutes, depending on your drive size'
+	print _('The scan can take few minutes, depending on your drive size')
 	Filer = filehandler.Filer(path)
-	print "Listing Music directory..."
+	print _("Listing Music directory...")
 	mp3list = Filer.supportedList()
 	total = str(len(mp3list))
-	print total + ' tracks have been found'
+	print _('%s tracks have been found') %total
 
 	metalist = []
-	print "Collecting metadata from ID3 tags..."
+	print _("Collecting metadata from ID3 tags...")
 	for item in mp3list:
 		
 		id3 = id3handler.ID3handler(filename=item)
@@ -148,23 +171,23 @@ def metadata():
 		if info != 0:
 			metalist.append(info)
 	total = str(len(metalist))
-	print total + ' tags have been parsed'
-	print "Writing database...",
+	print _('%s tags have been parsed') %total
+	print _("Writing database..."),
 	f=open(output,'w')
 	pickle.dump(metalist, f)
 	f.close()
-	print "[ DONE ]"
+	print _("[ DONE ]")
 
         
 def lyrics():
 #Fetch the lyrics on Internet.
 	global found
-	print 'Reading meta.db...',
+	print _('Reading meta.db...'),
 	f = open('meta.db','r')
 	meta = pickle.load(f)
 	f.close()
 	total = len(meta)
-	print str(total) + ' songs found.'
+	print _('%s songs found.') %total
 	
 	found = []
 	notfound = []
@@ -195,9 +218,9 @@ def lyrics():
 			album = structAPI.Album()
 			year = structAPI.Year()
 			try:
-				print 'Getting lyrics for ' + artist.encode(outencoding) + ' - ' + title.encode(outencoding)
+				print _('Getting lyrics for {0} - {1}').format(artist.encode(outencoding), title.encode(outencoding))
 			except:
-				print 'Getting lyrics for ' + repr(artist) + ' - ' + repr(title)
+				print _('Getting lyrics for {0} - {1}').format(repr(artist), repr(title))
 			Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album, year)
 			
 			fetched = Lyricsapi.get()
@@ -212,15 +235,15 @@ def lyrics():
 			if lyric != None and lyric != 'Error':
 				foundcount = foundcount + 1
 				if cached == True:
-					print ">>> Found (Cached)"
+					print _(">>> Found (Cached)")
 				else:
-					print ">>> Found"
+					print _(">>> Found")
 			else:
 				notfoundcount = notfoundcount + 1
 				if cached == True:
-					print "!!! Not Found (Cached)"
+					print_( "!!! Not Found (Cached)")
 				else:
-					print "!!! Not Found"
+					print _("!!! Not Found")
 			
 			endtime = time.time()
 			loopduration = endtime - beginningtime
@@ -230,26 +253,28 @@ def lyrics():
 			percentage = (done*100)/total
 			foundpercentage = (foundcount*100)/total
 			notfoundpercentage = (notfoundcount*100)/total
-			print str(foundcount)  + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%). ' + str(foundcount+notfoundcount) + '/' + str(total)
+			print _('{0} lyrics found ({1}%). {2} not found ({3}%). {4}/{5}  ').format( str(foundcount), str(foundpercentage), str(notfoundcount), str(notfoundpercentage), str(foundcount + notfoundcount), str(total) )
+			#print str(foundcount)  + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%). ' + str(foundcount+notfoundcount) + '/' + str(total)
 			elapsedtuple = time.gmtime(elapsedtime)
 			timeformat = '%H:%M:%S'
 			elapsedstr = time.strftime(timeformat, elapsedtuple)
 			etatuple = time.gmtime(eta)
 			etastr = time.strftime(timeformat, etatuple)
-			print str(percentage) + '%  ' + elapsedstr + '  elapsed. Remaining time: ' + etastr + '\n'
+			print _('{0}%  {1}  elapsed. Remaining time: {2}\n').format( str(percentage), elapsedstr, etastr)
+			#print str(percentage) + '%  ' + elapsedstr + '  elapsed. Remaining time: ' + etastr + '\n'
 		
 		except KeyboardInterrupt:
 			sys.exit()
 
 def tagexport():
 #Exports the lyrics in music tags
-    print 'Opening lyrics.db...',
+    print _('Opening lyrics.db...'),
     f = open('lyrics.db')
     data = pickle.load(f)
     f.close()
-    print '[ DONE ]'
+    print _('[ DONE ]')
     datalen = len(data)
-    widgets = ['Exporting: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()), ' ', progressbar.ETA()]
+    widgets = [_('Exporting: '), progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()), ' ', progressbar.ETA()]
     pbar = progressbar.ProgressBar(widgets=widgets, maxval=datalen).start()
     count = 0
     for item in data:
@@ -258,25 +283,25 @@ def tagexport():
         motor = tagexporter.TagExport(item)
         motor.make()
     pbar.finish()
-    print 'Lyrics have been exported in their respective files tags'
+    print _('Lyrics have been exported in their respective files tags')
 
 def export(mode='export'):
 #Exports the lyrics as txt in export/ path or in the same paths as audio files.
-    print 'Opening lyrics.db...',
+    print _('Opening lyrics.db...'),
     f = open('lyrics.db')
     data = pickle.load(f)
     f.close()
-    print '[ DONE ]'
+    print _('[ DONE ]')
 
-    print 'Exporting...',
+    print _('Exporting...'),
     for item in data:
         motor = txtexporter.TxtExport(item, mode)
         motor.make()
-    print '[ DONE ]'
+    print _('[ DONE ]')
     if mode=='export':
-	print 'Lyrics have been exported in the export/ directory'
+	print _('Lyrics have been exported in the export/ directory')
     if mode=='path':
-	print 'Lyrics have been exported in corresponding songs directories'
+	print _('Lyrics have been exported in corresponding songs directories')
 
 #CLI loop
 while 1:
@@ -287,17 +312,17 @@ while 1:
         exit()
         
     if len(cmd) < 1 :
-        print "Type 'help' for a list of available commands."
+        print _("Type 'help' for a list of available commands.")
         
     if cmd == 'help':
-        print '==>List of available commands'
-        print '>help: Show the list of commands'
-        print '>scan: Search a directory for music.'
-        print '>fetch: Fetch the songs lyrics on the Internet.'
-        print '>export: Export the lyrics as .txt files in export/'
-	print '>txt: Export the lyrics as .txt in the songs directories.'
-        print '>tag: Export fetched lyrics in the music files ID3 tags'
-        print '>exit: Exit TuneHub'
+        print _('==>List of available commands')
+        print _('>help: Show the list of commands')
+        print _('>scan: Search a directory for music.')
+        print _('>fetch: Fetch the songs lyrics on the Internet.')
+        print _('>export: Export the lyrics as .txt files in export/')
+	print _('>txt: Export the lyrics as .txt in the songs directories.')
+        print _('>tag: Export fetched lyrics in the music files ID3 tags')
+        print _('>exit: Exit TuneHub')
     
     if cmd == 'scan':
         metadata()
