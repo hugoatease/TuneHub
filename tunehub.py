@@ -183,92 +183,101 @@ def metadata():
 	print _("[ DONE ]")
 
         
-def lyrics():
-#Fetch the lyrics on Internet.
-	global found
-	print _('Reading meta.db...'),
-	f = open('meta.db','r')
-	meta = pickle.load(f)
+ 
+class Lyrics:
+    #This class provides a CLI which fetches Lyrics with tunehubcore.
+    def __init__(self, metafile = 'meta.db'):
+	self.metafile = metafile
+	self.cache = cache.Cache()
+	self.structAPI = datastruct.Structure
+	
+	self.done = 0
+	self.elapsedtime = 0
+	self.foundcount = 0
+	self.notfoundcount = 0
+	self.found = []
+	self.notfound = []
+	
+    def readFile(self):
+	f = open(self.metafile, 'r')
+	self.filedata = pickle.load(f)
 	f.close()
-	total = len(meta)
-	print _('%s songs found.') %total
+	total = len(self.filedata)
+	self.total = total
+	return total
 	
-	found = []
-	notfound = []
+    def saveFile(self):
+	found = self.found
+	f = open('lyrics.db', 'w')
+	pickle.dump(found, f)
+	f.close()
 	
-	Structure = datastruct.Structure
+    def get(self, metaitem):
+	begin = time.time()
+	structAPI = self.structAPI(metaitem)
+	artist = structAPI.Artist()
+	title = structAPI.Title()
+	album = structAPI.Album()
+	year = structAPI.Year()
+	filename = structAPI.Filename()
 	
-	def save():
-		global found
-		f=open('lyrics.db','w')
-		pickle.dump(found,f)
-		f.close()
+	lyricsapi = lyricsapi2.Lyrics(self.cache, artist, title, album, year)
+	fetched = lyricsapi.get()
+	fetchedAPI = self.structAPI(fetched)
+	if fetched != 0:
+	    fetchedAPI.Filename(filename)
+	    self.found.append(fetchedAPI.get())
+	    self.saveFile()
+	    
+	lyric = fetchedAPI.Lyric()
+	cached = fetchedAPI.Cached()
+	if lyric != None and lyric != 'Error':
+	    self.foundcount = self.foundcount + 1
+	    isfound = True
+	else:
+	    self.notfoundcount = self.notfoundcount + 1
+	    isfound = False
 	
+	end = time.time()
+	duration = end - begin
+	self.elapsedtime = self.elapsedtime + duration
+	self.done = self.done + 1
+	return {'Found' : isfound, 'Cached' : cached, 'Duration' : duration}
 	
-	done = 0
-	elapsedtime = 0
+    def run(self):
+	print _('Reading meta.db...'),
+	print _('%s songs found.') % self.readFile()
 	
-	foundcount = 0
-	notfoundcount = 0
-	
-	cacheobject = cache.Cache()
-	
-	for item in  meta:
-		try:
-			beginningtime = time.time()
-			structAPI = Structure(item)
-			artist = structAPI.Artist()
-			title = structAPI.Title()
-			album = structAPI.Album()
-			year = structAPI.Year()
-			try:
-				print _('Getting lyrics for {0} - {1}').format(artist.encode(outencoding), title.encode(outencoding))
-			except:
-				print _('Getting lyrics for {0} - {1}').format(repr(artist), repr(title))
-			Lyricsapi = lyricsapi2.Lyrics(cacheobject, artist, title, album, year)
-			
-			fetched = Lyricsapi.get()
-			if fetched != 0:
-				fetched['Filename'] = item['Filename']
-				found.append(fetched)
-				save()
-			
-			structAPI = datastruct.Structure(fetched)
-			lyric = structAPI.Lyric()
-			cached = structAPI.Cached()
-			if lyric != None and lyric != 'Error':
-				foundcount = foundcount + 1
-				if cached == True:
-					print _(">>> Found (Cached)")
-				else:
-					print _(">>> Found")
-			else:
-				notfoundcount = notfoundcount + 1
-				if cached == True:
-					print_( "!!! Not Found (Cached)")
-				else:
-					print _("!!! Not Found")
-			
-			endtime = time.time()
-			loopduration = endtime - beginningtime
-			elapsedtime = elapsedtime + loopduration
-			done = done +1
-			eta = ((total * elapsedtime)/done) - elapsedtime
-			percentage = (done*100)/total
-			foundpercentage = (foundcount*100)/total
-			notfoundpercentage = (notfoundcount*100)/total
-			print _('{0} lyrics found ({1}%). {2} not found ({3}%). {4}/{5}  ').format( str(foundcount), str(foundpercentage), str(notfoundcount), str(notfoundpercentage), str(foundcount + notfoundcount), str(total) )
-			#print str(foundcount)  + ' lyrics found (' + str(foundpercentage) + '%). ' + str(notfoundcount) + ' not found (' + str(notfoundpercentage) + '%). ' + str(foundcount+notfoundcount) + '/' + str(total)
-			elapsedtuple = time.gmtime(elapsedtime)
-			timeformat = '%H:%M:%S'
-			elapsedstr = time.strftime(timeformat, elapsedtuple)
-			etatuple = time.gmtime(eta)
-			etastr = time.strftime(timeformat, etatuple)
-			print _('{0}%  {1}  elapsed. Remaining time: {2}\n').format( str(percentage), elapsedstr, etastr)
-			#print str(percentage) + '%  ' + elapsedstr + '  elapsed. Remaining time: ' + etastr + '\n'
+	for item in self.filedata:
+	    structAPI = self.structAPI(item)
+	    try:
+		print _('Getting lyrics for {0} - {1}').format((structAPI.Artist()).encode(outencoding), (structAPI.Title()).encode(outencoding))
+	    except:
+		print _('Getting lyrics for {0} - {1}').format(repr(structAPI.Artist()), repr(structAPI.Title() ))
 		
-		except KeyboardInterrupt:
-			sys.exit()
+	    getstate = self.get(item)
+	    if getstate['Found']:
+		statestring = _(">>> Found")
+	    else:
+		statestring = _("!!! Not Found")
+	    
+	    if getstate['Cached']:
+		statestring = _('%s (Cached)') %statestring
+	    print statestring
+		
+	    eta = ((self.total * self.elapsedtime)/self.done) - self.elapsedtime
+	    percentage = (self.done*100)/self.total
+	    foundpercentage = (self.foundcount*100)/self.total
+	    notfoundpercentage = (self.notfoundcount*100)/self.total
+	    print _('{0} lyrics found ({1}%). {2} not found ({3}%). {4}/{5}  ').format( str(self.foundcount), str(foundpercentage), str(self.notfoundcount), str(notfoundpercentage), str(self.foundcount + self.notfoundcount), str(self.total) )
+	
+	    elapsedtuple = time.gmtime(self.elapsedtime)
+	    timeformat = '%H:%M:%S'
+	    elapsedstr = time.strftime(timeformat, elapsedtuple)
+	    etatuple = time.gmtime(eta)
+	    etastr = time.strftime(timeformat, etatuple)
+	    print _('{0}%  {1}  elapsed. Remaining time: {2}\n').format( str(percentage), elapsedstr, etastr)
+	
 
 def tagexport():
 #Exports the lyrics in music tags
@@ -332,7 +341,9 @@ while 1:
         metadata()
     
     if cmd == 'fetch':
-        lyrics()
+	lyrics = Lyrics()
+	lyrics.run()
+        
     
     if cmd == 'export':
         export()
