@@ -1,0 +1,216 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-09-22 19:12+0200\n"
+"PO-Revision-Date: 2011-09-23 18:52+0100\n"
+"Last-Translator: Hugo Caille <hugo@gkz.fr.nf>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tunehub.py:95
+#, python-format
+msgid "%s was corrupted. Now deleted to prevent file corruption issues."
+msgstr "Le fichier %s a ete detruit, il etait corrompu."
+
+#: tunehub.py:113
+msgid "Report succesfully sent. Thank you for testing TuneHub :)"
+msgstr "Rapport envoye. Merci de tester TuneHub :)"
+
+#: tunehub.py:115
+msgid "Unable to send the bug report."
+msgstr "Impossible d'envoyer le rapport de bug pour le moment."
+
+#: tunehub.py:117
+msgid "Press Enter"
+msgstr "Appuyez sur Entree."
+
+#: tunehub.py:119
+msgid ""
+"A crashed occured last time you used TuneHub.\n"
+"Sending crash informations in background...\n"
+msgstr ""
+"TuneHub a subi un arret innatendu.\n"
+"Envoi des informations sur le crash en arriere-plan...\n"
+
+#: tunehub.py:132
+msgid "Please pick up a file in the path selection window"
+msgstr "Selectionnez un fichier dans la fenetre de selection."
+
+#: tunehub.py:136
+msgid "Please select your music path"
+msgstr "Selectionnez le dossier de vos morceaux."
+
+#: tunehub.py:138
+#, python-format
+msgid "Choosed path: %s"
+msgstr "Dossier choisi : %s"
+
+#: tunehub.py:143
+msgid "You haven't provide the path through the Graphical Interface. Please follow this"
+msgstr "Vous n'avez pas choisi de fichier dans l'interface graphique. Suivez ceci:"
+
+#: tunehub.py:144
+msgid "Now enter your music (or player) path"
+msgstr "Specifiez le repertoire de vos morceaux. Vous pouvez indiquer un peripherique."
+
+#: tunehub.py:145
+msgid "Examples : H: on Windows or /media/myPlayer on UNIX (Linux, Mac OS X, BSD and Others...)"
+msgstr "Exemple: H: sur Windows ou /media/monBalladeur sous UNIX (Linux, Mac OS X, BSD et les autres...)"
+
+#: tunehub.py:146
+msgid "Path: "
+msgstr "Dossier:"
+
+#: tunehub.py:150
+msgid "You haven't provide your music path. Program will now exit"
+msgstr "Vous n'avez pas fourni de dossier a scanner. Le programme va quitter."
+
+#: tunehub.py:152
+msgid ""
+"\n"
+"Metadata database have meta.db as default name. If you wanna change this, type the new name now"
+msgstr ""
+"\n"
+"La base des metadonnees a pour nom par defaut meta.db . Si vous voulez changer ce parametre, tapez le nouveau nom maintenant."
+
+#: tunehub.py:153
+msgid "Metadata database's name: "
+msgstr "Nom de la base de metadonnees: "
+
+#: tunehub.py:157
+msgid "The scan can take few minutes, depending on your drive size"
+msgstr "La recherche peut prendre plusieurs minutes, sa duree depend de l'etendue du dossier a scanner."
+
+#: tunehub.py:159
+msgid "Listing Music directory..."
+msgstr "Indexation du dossier de musique..."
+
+#: tunehub.py:162
+#, python-format
+msgid "%s tracks have been found"
+msgstr "%s morceaux ont ete trouves."
+
+#: tunehub.py:165
+msgid "Collecting metadata from ID3 tags..."
+msgstr "Recherche des metadonnees dans les tags ID3..."
+
+#: tunehub.py:174
+#, python-format
+msgid "%s tags have been parsed"
+msgstr "%s tags ont ete analyses."
+
+#: tunehub.py:175
+msgid "Writing database..."
+msgstr "Ecriture de la base de donnees..."
+
+#: tunehub.py:179
+#: tunehub.py:275
+#: tunehub.py:294
+#: tunehub.py:300
+msgid "[ DONE ]"
+msgstr "[ FAIT ]"
+
+#: tunehub.py:185
+msgid "Reading meta.db..."
+msgstr "Lecture de meta.db ..."
+
+#: tunehub.py:190
+#, python-format
+msgid "%s songs found."
+msgstr "%s morceaux trouves."
+
+#: tunehub.py:221
+#: tunehub.py:223
+msgid "Getting lyrics for {0} - {1}"
+msgstr "Recherche des paroles pour {0} - {1}"
+
+#: tunehub.py:238
+msgid ">>> Found (Cached)"
+msgstr ">>> OK (via le Cache)"
+
+#: tunehub.py:240
+msgid ">>> Found"
+msgstr ">>> OK"
+
+#: tunehub.py:246
+msgid "!!! Not Found"
+msgstr "!!! Non Disponible"
+
+#: tunehub.py:256
+msgid "{0} lyrics found ({1}%). {2} not found ({3}%). {4}/{5}  "
+msgstr "{0} paroles trouvees ({1}%). {2} non trouvees ({3}%). {4}/{5}"
+
+#: tunehub.py:263
+msgid "{0}%  {1}  elapsed. Remaining time: {2}\n"
+msgstr "{0}% {1} écoulees. Temps restant: {2}\n"
+
+#: tunehub.py:271
+#: tunehub.py:290
+msgid "Opening lyrics.db..."
+msgstr "Ouverture de lyrics.db ..."
+
+#: tunehub.py:277
+msgid "Exporting: "
+msgstr "Export:"
+
+#: tunehub.py:286
+msgid "Lyrics have been exported in their respective files tags"
+msgstr "Les paroles ont ete exportees dans leurs tags respectifs."
+
+#: tunehub.py:296
+msgid "Exporting..."
+msgstr "Export..."
+
+#: tunehub.py:302
+msgid "Lyrics have been exported in the export/ directory"
+msgstr "Les paroles ont ete exportees dans le dossier export/"
+
+#: tunehub.py:304
+msgid "Lyrics have been exported in corresponding songs directories"
+msgstr "Les paroles ont ete exportees dans les memes dossiers que les morceaux."
+
+#: tunehub.py:315
+msgid "Type 'help' for a list of available commands."
+msgstr "Tapez 'help' pour obtenir une liste des commandes disponibles."
+
+#: tunehub.py:318
+msgid "==>List of available commands"
+msgstr "==>Liste des commandes disponibles"
+
+#: tunehub.py:319
+msgid ">help: Show the list of commands"
+msgstr ">help: Montre la liste des commandes."
+
+#: tunehub.py:320
+msgid ">scan: Search a directory for music."
+msgstr ">scan: Indexe la musique d'un dossier local."
+
+#: tunehub.py:321
+msgid ">fetch: Fetch the songs lyrics on the Internet."
+msgstr ">fetch: Va chercher les paroles sur Internet."
+
+#: tunehub.py:322
+msgid ">export: Export the lyrics as .txt files in export/"
+msgstr ">export: Exporte les paroles en tant que fichiers .txt dans le dossier export/"
+
+#: tunehub.py:323
+msgid ">txt: Export the lyrics as .txt in the songs directories."
+msgstr ">txt: Exporte les paroles en tant que .txt dans les dossiers des morceaux."
+
+#: tunehub.py:324
+msgid ">tag: Export fetched lyrics in the music files ID3 tags"
+msgstr ">tag: Exporte les paroles obtenues dans les tags ID3 des morceaux."
+
+#: tunehub.py:325
+msgid ">exit: Exit TuneHub"
+msgstr ">exit: Ferme TuneHub"
+
