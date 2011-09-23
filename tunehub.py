@@ -66,7 +66,11 @@ def init_localization():
   locale.setlocale(locale.LC_ALL, '') # use user's preferred locale
   # take first two characters of country code
   loc = locale.getlocale()
-  filename = "res/messages_%s.mo" % locale.getlocale()[0][0:2]
+  
+  if win.isWindows():
+    filename = "res/windows/messages_%s.mo" % locale.getlocale()[0][0:2]
+  else:
+    filename = "res/messages_%s.mo" % locale.getlocale()[0][0:2]
 
   try:
     logging.debug( "Opening message file %s for locale %s", filename, loc[0] )
