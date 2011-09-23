@@ -262,7 +262,7 @@ class Lyrics:
 		statestring = _("!!! Not Found")
 	    
 	    if getstate['Cached']:
-		statestring = '%s (Cached)' %statestring
+		statestring = _('%s (Cached)') %statestring
 	    print statestring
 		
 	    eta = ((self.total * self.elapsedtime)/self.done) - self.elapsedtime
