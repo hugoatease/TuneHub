@@ -51,7 +51,7 @@ import progressbar
 
 #TuneHub internal modules imports.
 import tunehubcore
-from tunehubcore import windows, filehandler, id3handler, cache, lyricsapi2, datastruct, tagexporter, txtexporter
+from tunehubcore import windows, filehandler, id3handler, cache, lyricsapi2, datastruct, tagexporter, txtexporter, suggest
 
 #Initialising Windows-specific environnement.
 win = windows.Windows(title = 'TuneHub CLI')
@@ -197,6 +197,7 @@ class Lyrics:
 	self.notfoundcount = 0
 	self.found = []
 	self.notfound = []
+	self.corrected = []
 	
     def readFile(self):
 	f = open(self.metafile, 'r')
@@ -248,6 +249,7 @@ class Lyrics:
 	print _('Reading meta.db...'),
 	print _('%s songs found.') % self.readFile()
 	
+	filedataiterator = 0
 	for item in self.filedata:
 	    structAPI = self.structAPI(item)
 	    try:
@@ -260,10 +262,24 @@ class Lyrics:
 		statestring = _(">>> Found")
 	    else:
 		statestring = _("!!! Not Found")
-	    
+		
 	    if getstate['Cached']:
 		statestring = _('%s (Cached)') %statestring
 	    print statestring
+	    
+	    if getstate['Found'] == False:
+		suggestAPI = suggest.Suggest(structAPI.Artist(), structAPI.Album(), structAPI.Title())
+		top = suggestAPI.get()
+		if len(top) > 0:
+		    if top[0] in self.corrected:
+			pass
+		    else:
+			print _('Will try to search for %s song.') % top[0]
+			result = self.structAPI(structAPI.get())
+			result.Title(top[0])
+			self.filedata.insert(filedataiterator+1, result.get())
+			self.corrected.append(top[0])
+			self.total = self.total +1 
 		
 	    eta = ((self.total * self.elapsedtime)/self.done) - self.elapsedtime
 	    percentage = (self.done*100)/self.total
@@ -277,6 +293,8 @@ class Lyrics:
 	    etatuple = time.gmtime(eta)
 	    etastr = time.strftime(timeformat, etatuple)
 	    print _('{0}%  {1}  elapsed. Remaining time: {2}\n').format( str(percentage), elapsedstr, etastr)
+	    
+	    filedataiterator = filedataiterator + 1
 	
 
 def tagexport():
