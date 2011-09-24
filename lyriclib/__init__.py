@@ -1,4 +1,4 @@
-__all__ = ['metahub', 'sing365', 'lyricsapi']
+__all__ = ['metahub', 'sing365', 'lyricsapi', 'group']
 __version__ = 1
 
 import sing365, lyricsapi, metahub

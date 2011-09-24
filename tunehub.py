@@ -256,12 +256,13 @@ class Lyrics:
 	    structAPI = self.structAPI(item)
 	    dic = {'Artist' : structAPI.Artist() , 'Title' : structAPI.Title() }
 	    metarequest.append(dic)
+	
 	meta = group.Group(metarequest)
 	metaresults = meta.get()
-	self.cache.openFile()
 	for result in metaresults:
+	    self.cache.setMeta(result['Artist'], result['Title'])
 	    self.cache.add(result['Lyric'], result['SiteID'])
-	self.cache.writeFile()
+	    	
 	print _('{0}/{1} lyrics downloaded on MetaHub.').format(len(metaresults), total)
 	    
 	

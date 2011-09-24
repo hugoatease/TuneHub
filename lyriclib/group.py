@@ -45,7 +45,10 @@ class Group:
         csvapi.writerow(['Artist', 'Title'])
         
         for item in self.filter:
-            csvapi.writerow( [ item['Artist'] , item['Title'] ] )
+            try:
+                csvapi.writerow( [ item['Artist'] , item['Title'] ] )
+            except:
+                pass
         
         self.csv = vf.get(compress=False)
         
