@@ -52,6 +52,7 @@ import progressbar
 #TuneHub internal modules imports.
 import tunehubcore
 from tunehubcore import windows, filehandler, id3handler, cache, lyricsapi2, datastruct, tagexporter, txtexporter
+from lyriclib import group
 
 #Initialising Windows-specific environnement.
 win = windows.Windows(title = 'TuneHub CLI')
@@ -246,7 +247,23 @@ class Lyrics:
 	
     def run(self):
 	print _('Reading meta.db...'),
-	print _('%s songs found.') % self.readFile()
+	total = self.readFile()
+	print _('%s songs found.') % total
+	
+	print _("Downloading MetaHub's cache...")
+	metarequest = []
+	for item in self.filedata:
+	    structAPI = self.structAPI(item)
+	    dic = {'Artist' : structAPI.Artist() , 'Title' : structAPI.Title() }
+	    metarequest.append(dic)
+	meta = group.Group(metarequest)
+	metaresults = meta.get()
+	self.cache.openFile()
+	for result in metaresults:
+	    self.cache.add(result['Lyric'], result['SiteID'])
+	self.cache.writeFile()
+	print _('{0}/{1} lyrics downloaded on MetaHub.').format(len(metaresults), total)
+	    
 	
 	for item in self.filedata:
 	    structAPI = self.structAPI(item)
